@@ -1,0 +1,185 @@
+BACKUPS
+====================
+
+
+************************************************************
+CONFIG FOR R1
+************************************************************
+
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R1(config)#do show run | sect bgp
+router bgp 65000
+ bgp router-id 1.1.1.1
+ bgp log-neighbor-changes
+ network 1.1.1.1 mask 255.255.255.255
+ network 11.11.11.11 mask 255.255.255.255
+ neighbor 10.2.4.4 remote-as 65000
+R1(config)#do show run | sect route-map
+route-map muje permit 10
+R1(config)#do show run | sect prefix-list
+R1(config)#end
+R1#
+************************************************************
+
+
+************************************************************
+CONFIG FOR R2
+************************************************************
+
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R2(config)#do show run | sect bgp
+router bgp 65000
+ bgp router-id 2.2.2.2
+ bgp log-neighbor-changes
+ network 2.2.2.2 mask 255.255.255.255
+ neighbor 10.2.4.4 remote-as 65000
+ neighbor 10.2.6.6 remote-as 65006
+ neighbor 10.2.6.6 route-map prepend out
+R2(config)#do show run | sect route-map
+ neighbor 10.2.6.6 route-map prepend out
+route-map prepend permit 10
+ match ip address prefix-list vrajeala
+ set as-path prepend 65000 65000 65000 65000
+route-map prepend permit 20
+R2(config)#do show run | sect prefix-list
+ip prefix-list vrajeala seq 5 permit 11.11.11.11/32
+ match ip address prefix-list vrajeala
+R2(config)#end
+R2#
+************************************************************
+
+
+************************************************************
+CONFIG FOR R3
+************************************************************
+
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#do show run | sect bgp
+router bgp 65000
+ bgp router-id 3.3.3.3
+ bgp log-neighbor-changes
+ network 3.3.3.3 mask 255.255.255.255
+ neighbor 10.2.4.4 remote-as 65000
+ neighbor 10.3.5.5 remote-as 65005
+R3(config)#do show run | sect route-map
+R3(config)#do show run | sect prefix-list
+R3(config)#end
+R3#
+************************************************************
+
+
+************************************************************
+CONFIG FOR R4
+************************************************************
+
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R4(config)#do show run | sect bgp
+router bgp 65000
+ bgp router-id 4.4.4.4
+ bgp log-neighbor-changes
+ network 4.4.4.4 mask 255.255.255.255
+ neighbor 10.1.2.1 remote-as 65000
+ neighbor 10.1.2.1 route-reflector-client
+ neighbor 10.1.2.1 next-hop-self
+ neighbor 10.2.4.2 remote-as 65000
+ neighbor 10.2.4.2 route-reflector-client
+ neighbor 10.2.4.2 next-hop-self
+ neighbor 10.3.4.3 remote-as 65000
+ neighbor 10.3.4.3 route-reflector-client
+ neighbor 10.3.4.3 next-hop-self
+R4(config)#do show run | sect route-map
+R4(config)#do show run | sect prefix-list
+R4(config)#end
+R4#
+************************************************************
+
+
+************************************************************
+CONFIG FOR R5
+************************************************************
+
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R5(config)#do show run | sect bgp
+router bgp 65005
+ bgp router-id 5.5.5.5
+ bgp log-neighbor-changes
+ network 5.5.5.5 mask 255.255.255.255
+ neighbor 10.3.5.3 remote-as 65000
+ neighbor 10.5.7.7 remote-as 65007
+ neighbor 10.5.7.7 route-map to_R7 in
+R5(config)#do show run | sect route-map
+ neighbor 10.5.7.7 route-map to_R7 in
+route-map to_R7 permit 10
+ match ip address prefix-list via_R7
+ set local-preference 200
+route-map to_R7 permit 20
+R5(config)#do show run | sect prefix-list
+ip prefix-list via_R7 seq 5 permit 1.1.1.1/32
+ip prefix-list via_R7 seq 10 permit 11.11.11.11/32
+ match ip address prefix-list via_R7
+R5(config)#end
+R5#
+************************************************************
+
+
+************************************************************
+CONFIG FOR R6
+************************************************************
+
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R6(config)#do show run | sect bgp
+router bgp 65006
+ bgp router-id 6.6.6.6
+ bgp log-neighbor-changes
+ network 6.6.6.6 mask 255.255.255.255
+ network 66.66.66.66 mask 255.255.255.255
+ neighbor 10.2.6.2 remote-as 65000
+ neighbor 10.6.7.7 remote-as 65007
+R6(config)#do show run | sect route-map
+R6(config)#do show run | sect prefix-list
+R6(config)#end
+R6#
+************************************************************
+
+
+************************************************************
+CONFIG FOR R7
+************************************************************
+
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R7(config)#do show run | sect bgp
+router bgp 65007
+ bgp router-id 7.7.7.7
+ bgp log-neighbor-changes
+ network 7.7.7.7 mask 255.255.255.255
+ neighbor 10.5.7.5 remote-as 65005
+ neighbor 10.5.7.5 route-map to_R5 in
+ neighbor 10.6.7.6 remote-as 65006
+ neighbor 10.6.7.6 route-map to_R6 in
+R7(config)#do show run | sect route-map
+ neighbor 10.5.7.5 route-map to_R5 in
+ neighbor 10.6.7.6 route-map to_R6 in
+route-map to_R6 permit 10
+ match ip address prefix-list via_R6
+ set local-preference 200
+route-map to_R6 permit 20
+route-map to_R5 permit 10
+ match ip address prefix-list via_R5
+ set local-preference 200
+route-map to_R5 permit 20
+R7(config)#do show run | sect prefix-list
+ip prefix-list via_R5 seq 5 permit 11.11.11.11/32
+ip prefix-list via_R6 seq 5 permit 1.1.1.1/32
+ match ip address prefix-list via_R6
+ match ip address prefix-list via_R5
+R7(config)#end
+R7#
+************************************************************
+

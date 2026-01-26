@@ -1,0 +1,5 @@
+{% for lo in loopbacks %}
+interface Loopback{{ lo.id }}
+    description {{ lo.description }}
+    ip address {{ lo.ip }} {{ lo.mask }}
+{% endfor %}

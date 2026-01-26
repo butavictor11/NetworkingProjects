@@ -1,0 +1,14 @@
+{% for interface in channels %}
+interface {{ interface.member1 }}
+ description {{ interface.description }}
+ no switchport
+ no ip address
+ channel-group {{ interface.channel }} mode {{ interface.mode }}
+{% endfor %}
+
+{% for channel in portchannel %}
+interface {{ channel.name }}
+ no switchport
+ ip address {{ channel.ip }} {{ channel.mask }}
+ ip ospf {{ channel.ospf_id }} area {{ channel.area }}
+{% endfor %}

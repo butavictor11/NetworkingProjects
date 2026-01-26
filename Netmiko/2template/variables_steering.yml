@@ -1,0 +1,51 @@
+R4:
+  prefix_list: 
+    - name: via_r2
+      prefix: 1.1.1.1/32
+    - name: via_r3
+      prefix: 11.11.11.11/32
+  maps:
+    - name: to_r2
+      sequence: 10
+      match:  via_r2
+      local:  200
+    - name: to_r2
+      sequence: 20  
+    - name: to_r3
+      sequence: 10 
+      match:  via_r3
+      local:  200
+    - name: to_r3
+      sequence: 20
+
+  asn:  65004
+  policies:
+    - neighbor: 10.2.4.2
+      name: to_r2
+      direction: in
+    - neighbor: 10.3.4.3
+      name: to_r3
+      direction: in
+
+R3:
+  prefix_list:
+    - name: via_r4
+      prefix: 1.1.1.1/32
+    - name: via_r42
+      prefix: 11.11.11.11/32
+  maps:
+    - name: to_R4
+      sequence: 10
+      match: via_r4
+      local: 200
+    - name: to_R4
+      sequence: 20
+      match: via_r42
+      local: 200
+    - name: to_R4
+      sequence: 30
+  asn: 65003
+  policies:
+    - neighbor: 10.1.3.1
+      name: to_R4
+      direction: in

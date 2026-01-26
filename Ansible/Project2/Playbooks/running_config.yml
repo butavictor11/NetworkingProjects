@@ -1,0 +1,24 @@
+---
+- name: Snapshot running-configs to files
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Get running-config
+      cisco.ios.ios_command:
+        commands:
+          - show running-config
+      register: run_cfg
+
+    - name: Ensure snapshots folder exists (on controller)
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/../configs/running-snapshots"
+        state: directory
+      delegate_to: localhost
+      run_once: true
+
+    - name: Save running-config snapshot (on controller)
+      ansible.builtin.copy:
+        content: "{{ run_cfg.stdout[0] }}"
+        dest: "{{ playbook_dir }}/../configs/running-snapshots/{{ inventory_hostname }}_running.cfg"
+      delegate_to: localhost

@@ -1,0 +1,31 @@
+- name: Ensure build directory exists (core)
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}"
+    state: directory
+  delegate_to: localhost
+
+- name: Render core config snippet
+  ansible.builtin.template:
+    src: core.j2
+    dest: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/10_core.cfg"
+  delegate_to: localhost
+
+- name: Assemble final config
+  ansible.builtin.assemble:
+    src: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}"
+    dest: "{{ playbook_dir }}/../configs/{{ inventory_hostname }}_access.cfg"
+  delegate_to: localhost
+
+- name: Push configs
+  cisco.ios.ios_config:
+    src: "{{ playbook_dir }}/../configs/{{ inventory_hostname }}_access.cfg"
+    match: line
+    replace: line
+    diff_against: running
+    save_when: modified
+
+  register: push_result
+
+- name: Show ios_config diff (only when there is a diff)
+  ansible.builtin.debug:
+    var: push_result.updates

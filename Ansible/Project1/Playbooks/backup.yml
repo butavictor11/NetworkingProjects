@@ -1,0 +1,21 @@
+---
+- name: Backup configs from all network devices
+  hosts: cisco
+  gather_facts: no   
+
+  tasks:
+    - name: Generate timestamp
+      set_fact:
+        timestamp: "{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"   ### creates variable timestamp via the linux function
+
+    - name: Get running configuration
+      cisco.ios.ios_command:
+        commands:
+          - show running-config
+      register: config_output
+
+    - name: Save backup to file
+      copy:
+        content: "{{ config_output.stdout[0] }}"
+        dest: "backups/{{ inventory_hostname }}-running-{{ timestamp }}.cfg"
+

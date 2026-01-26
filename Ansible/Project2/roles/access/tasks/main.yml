@@ -1,0 +1,48 @@
+- name: Ensure build directory exists (access)
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}"
+    state: directory
+  delegate_to: localhost
+
+- name: Render VLAN config snippet
+  ansible.builtin.template:
+    src: vlan.j2
+    dest: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/10_vlan.cfg"
+  delegate_to: localhost
+
+- name: Render Interface config snippet
+  ansible.builtin.template:
+    src: interfaces.j2
+    dest: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/20_interface.cfg"
+  delegate_to: localhost
+
+# ✅ Documentation-only: build a single file (not used for push)
+- name: Assemble final access config (documentation only)
+  ansible.builtin.assemble:
+    src: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}"
+    dest: "{{ playbook_dir }}/../configs/{{ inventory_hostname }}_access.cfg"
+  delegate_to: localhost
+
+- name: Push VLAN config only
+  cisco.ios.ios_config:
+    src: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/10_vlan.cfg"
+    match: line
+    replace: line
+    diff_against: running
+    save_when: modified
+  register: vlan_push
+
+
+- name: Push interface config only
+  cisco.ios.ios_config:
+    src: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/20_interface.cfg"
+    match: line
+    replace: line
+    diff_against: running
+    save_when: modified
+  register: intf_push
+
+- name: Show interface diff (only when there is a diff)
+  ansible.builtin.debug:
+    var: intf_push.updates
+  when: intf_push.changed | bool

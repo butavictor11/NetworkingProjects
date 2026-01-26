@@ -1,0 +1,20 @@
+router bgp {{ asn }}
+bgp router-id {{ RID }}
+
+{% for nbr in neighbors %}
+
+    neighbor {{ nbr.ip }} remote-as {{ nbr.asn }}
+
+{% if nbr.asn == asn and function == "RR" %}
+
+    neighbor {{ nbr.ip }} route-reflector-client
+    neighbor {{ nbr.ip }} next-hop-self
+
+{% endif %}
+{% endfor %}
+
+{% for net in networks %}
+
+    network {{ net.ip }} mask {{ net.mask }}
+
+{% endfor %}

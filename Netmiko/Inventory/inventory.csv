@@ -1,0 +1,6 @@
+host,hostname,os,version,uptime
+172.20.10.3,R1,IOS Software,15.9(3)M9,"6 hours, 39 minutes"
+172.20.10.4,R2,IOS Software,15.9(3)M9,"6 hours, 39 minutes"
+172.20.10.2,R3,IOS Software,15.9(3)M9,"6 hours, 39 minutes"
+172.20.10.7,CSR1,IOS XE Software,16.09.07,"3 hours, 23 minutes"
+172.20.10.5,NEXUS,Nexus Operating System ,10.5(1),"0 day(s), 1 hour(s), 42 minute(s), 44 second(s)"

@@ -1,0 +1,32 @@
+R1:
+  loopbacks:
+    - id: 99
+      description: Management Loopback
+      ip: 1.1.1.1
+      mask: 255.255.255.255
+
+R2:
+  loopbacks:
+    - id: 99
+      description: Management Loopback
+      ip: 2.2.2.2
+      mask: 255.255.255.255
+    - id: 98
+      description: sanky
+      ip: 22.22.22.22
+      mask: 255.255.255.255
+
+
+R3:
+  loopbacks:
+    - id: 99
+      description: Management Loopback
+      ip: 3.3.3.3
+      mask: 255.255.255.255
+
+R4:
+  loopbacks:
+    - id: 99
+      description: Management Loopback
+      ip: 4.4.4.4
+      mask: 255.255.255.255

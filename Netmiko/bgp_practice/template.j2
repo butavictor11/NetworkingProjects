@@ -1,0 +1,15 @@
+router bgp {{ asn }}
+    bgp router-id {{ RID }}
+
+{% for nbr in neighbors %}
+
+    neighbor {{ nbr.ip }} remote-as {{ nbr.asn}}
+    
+{% endfor %}
+
+{% for net in networks %}
+
+    network {{ net.ip }} mask {{ net.mask }}
+
+{% endfor %}
+

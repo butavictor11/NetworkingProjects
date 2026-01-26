@@ -1,0 +1,90 @@
+R1:
+  asn: 65000
+  RID: 1.1.1.1
+  function: RR_client
+  neighbors:
+    - ip: 10.2.4.4
+      asn: 65000
+  networks:
+    - ip: 1.1.1.1
+      mask: 255.255.255.255
+    - ip: 11.11.11.11
+      mask: 255.255.255.255
+    
+R2:
+  asn: 65000
+  RID: 2.2.2.2
+  function: RR_client
+  neighbors:
+    - ip: 10.2.4.4
+      asn: 65000
+    - ip: 10.2.6.6
+      asn: 65006
+  networks:
+    - ip: 2.2.2.2
+      mask: 255.255.255.255
+R3:
+  asn: 65000
+  RID: 3.3.3.3
+  function: RR_client
+  neighbors:
+    - ip: 10.2.4.4
+      asn: 65000
+    - ip: 10.3.5.5
+      asn: 65005
+  networks:
+    - ip: 3.3.3.3
+      mask: 255.255.255.255
+R4:
+  asn: 65000
+  RID: 4.4.4.4
+  function: RR
+  neighbors:
+    - ip: 10.2.4.2
+      asn: 65000
+    - ip: 10.1.2.1
+      asn: 65000
+    - ip: 10.3.4.3
+      asn: 65000
+  networks:
+    - ip: 4.4.4.4
+      mask: 255.255.255.255
+
+R5:
+  asn: 65005
+  RID: 5.5.5.5 
+  neighbors:
+    - ip: 10.3.5.3
+      asn: 65000
+    - ip: 10.5.7.7
+      asn: 65007
+  networks:
+    - ip: 5.5.5.5
+      mask: 255.255.255.255
+
+
+R6:
+  asn: 65006
+  RID: 6.6.6.6 
+  neighbors:
+    - ip: 10.2.6.2
+      asn: 65000
+    - ip: 10.6.7.7
+      asn: 65007
+  networks:
+    - ip: 6.6.6.6
+      mask: 255.255.255.255
+    - ip: 66.66.66.66
+      mask: 255.255.255.255
+R7:
+  asn: 65007
+  RID: 7.7.7.7 
+  neighbors:
+    - ip: 10.6.7.6
+      asn: 65006
+    - ip: 10.5.7.5
+      asn: 65005
+  networks:
+    - ip: 7.7.7.7
+      mask: 255.255.255.255
+        

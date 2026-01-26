@@ -1,0 +1,19 @@
+---
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: cisco.ios.ios
+
+ansible_user: admin
+ansible_password: cisco
+ansible_ssh_pass: cisco
+
+ansible_ssh_common_args: >
+  -oKexAlgorithms=diffie-hellman-group14-sha1
+  -oHostKeyAlgorithms=ssh-rsa
+  -oPubkeyAcceptedAlgorithms=ssh-rsa
+  -oMACs=hmac-sha1,hmac-sha1-96
+  -oCiphers=aes128-ctr,aes192-ctr,aes256-ctr
+  -oStrictHostKeyChecking=no
+  -oUserKnownHostsFile=/dev/null
+  -oPasswordAuthentication=yes
+  -oPubkeyAuthentication=no
+ansible_gather_facts: false

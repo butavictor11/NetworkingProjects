@@ -1,0 +1,51 @@
+---
+- name: Create a build dir for this host
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}"
+    state: directory
+  delegate_to: localhost
+
+- name: Render distribution vlans
+  ansible.builtin.template:
+    src: vlan.j2
+    dest: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/5_vlan.cfg"
+  delegate_to: localhost
+
+- name: Render distribution interfaces
+  ansible.builtin.template:
+    src: distribution_interfaces.j2
+    dest: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/10_interfaces.cfg"
+  delegate_to: localhost
+
+- name: Render distribution portchannels
+  ansible.builtin.template:
+    src: portchannel.j2
+    dest: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/20_portchannel.cfg"
+  delegate_to: localhost
+
+- name: Assemble final config (appends in filename order)
+  ansible.builtin.assemble:
+    src: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}"
+    dest: "{{ playbook_dir }}/../configs/{{ inventory_hostname }}_access.cfg"
+  delegate_to: localhost
+
+- name: Push vlan configs
+  cisco.ios.ios_config:
+    src: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/5_vlan.cfg"
+    match: line
+    diff_against: running
+    save_when: modified
+- name: Push interface configs
+  cisco.ios.ios_config:
+    src: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/10_interfaces.cfg"
+    match: line
+    diff_against: running
+    save_when: modified
+- name: Push portchannel configs
+  cisco.ios.ios_config:
+    src: "{{ playbook_dir }}/../configs/build/{{ inventory_hostname }}/20_portchannel.cfg"
+    match: line
+    diff_against: running
+    save_when: modified
+
+

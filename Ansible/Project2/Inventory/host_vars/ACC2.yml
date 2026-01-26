@@ -1,0 +1,24 @@
+vlans:
+  - number: 30
+    description: HR
+  - number: 20
+    description: accounting 
+
+accessports:
+  - name: GigabitEthernet0/3
+    description: Access_port_in_HR_vlan
+    vlan: 30
+
+  - name: GigabitEthernet1/0
+    description: Access_port_in_accounting_vlan
+    vlan: 20
+
+trunks:
+  - name: GigabitEthernet0/0
+    description: Trunk_to_Distr1
+    allowed: 20,30
+
+  - name: GigabitEthernet0/1
+    description: Trunk_to_Distr2
+    allowed: 20,30
+    

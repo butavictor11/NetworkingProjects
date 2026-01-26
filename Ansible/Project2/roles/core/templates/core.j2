@@ -1,0 +1,10 @@
+router ospf {{ ospf_process }}
+ router-id {{ RID }}
+
+{% for int in interfaces %}
+interface {{ int.name}}
+ no switchport
+ description {{ int.description }}
+ ip address {{ int.ip }} {{ int.mask }}
+ ip ospf {{ int.ospf_process }} area {{ int.ospf_area }}
+{% endfor %}

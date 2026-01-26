@@ -1,0 +1,16 @@
+---
+- hosts: access
+  gather_facts: no
+  roles:
+    - access
+
+- hosts: distr
+  gather_facts: no
+  roles:
+    - distribution 
+
+- hosts: core
+  gather_facts: no
+  roles:
+    - core
+    

@@ -1,0 +1,16 @@
+
+{% for access in accessports %}
+interface {{ access.name }}
+ description {{ access.description }}
+ switchport mode access
+ switchport access vlan {{ access.vlan }}
+ spanning-tree portfast edge
+{% endfor %}
+
+{% for trunk in trunks %}
+interface {{ trunk.name }}
+ description {{ trunk.description }}
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan {{ trunk.allowed }}
+{% endfor %}

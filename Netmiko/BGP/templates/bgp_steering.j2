@@ -1,0 +1,40 @@
+{% for prefix in prefixes %}
+    ip prefix-list {{ prefix.name }} permit {{ prefix.ip }}
+{% endfor %}
+
+{% for map in maps %}
+
+    route-map {{ map.name }} permit {{ map.sequence }}
+    
+
+{% if map.pref %}
+    match ip address prefix-list {{ map.match }}
+    set local-preference {{ map.pref }}
+
+{% elif map.prepend %}
+    match ip address prefix-list {{ map.match }}
+    set as-path prepend {{ map.prepend }}
+
+
+{% elif map.weight %}
+    match ip address prefix-list {{ map.match }}
+    set weight {{ map.weight }}
+
+{% endif %}
+{% endfor %}
+
+router bgp {{ asn }}
+
+{% for policy in policies %}
+    neighbor {{ policy.neighbor }} route-map {{ policy.name }} {{ policy.direction }}
+
+{% endfor %}
+
+
+
+
+
+
+
+
+

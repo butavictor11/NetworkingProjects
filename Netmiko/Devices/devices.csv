@@ -1,0 +1,6 @@
+device_type,host,username,password,secret
+cisco_ios,172.20.10.3,admin,cisco,cisco
+cisco_ios,172.20.10.4,admin,cisco,cisco
+cisco_ios,172.20.10.2,admin,cisco,cisco
+cisco_ios,172.20.10.7,admin,cisco,cisco
+cisco_nxos,172.20.10.5,admin,cisco123,cisco123

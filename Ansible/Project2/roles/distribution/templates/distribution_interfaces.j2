@@ -1,0 +1,25 @@
+router ospf {{ ospf_process }}
+ router-id {{ RID }}
+{% for l2 in l2links %}
+interface {{ l2.name }}
+ description {{ l2.description }}
+ switchport trunk allowed vlan {{ l2.allowed }}
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+{% endfor %}
+{% for svi in svis %}
+interface Vlan{{ svi.name }}
+ ip address {{ svi.ip }} {{ svi.mask }}
+ standby {{ svi.standby }} ip {{ svi.stand_ip }}
+ standby {{ svi.standby }} priority {{ svi.priority }}
+ standby {{ svi.standby }} preempt
+ ip ospf {{ svi.ospf_id }} area {{ svi.area }}
+{% endfor %}
+{% for l3 in l3_links %}
+interface {{ l3.name }}
+ description {{ l3.description }}
+ no switchport
+ ip address {{ l3.ip }} {{ l3.mask }}
+ ip ospf {{ l3.ospf_id }} area {{ l3.area }}
+{% endfor %}
+    

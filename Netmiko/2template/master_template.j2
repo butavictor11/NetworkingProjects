@@ -1,0 +1,7 @@
+{# Always render connectivity #}
+{% include "template_connectivity.j2" %}
+
+{# Render steering ONLY if variables exist #}
+{% if prefix_list is defined %}
+{% include "template_steering.j2" %}
+{% endif %}
