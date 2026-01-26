@@ -20,8 +20,8 @@ Projects done so far:
 3.Script that pulls inventory info and stores it into a CSV file
     -> in this script I used 2 different functions, one to parse output of "show version" command and one to loop though devices and build a list,list is then used to build the CSV file
     -> for this lab, as observed in CSV file, I used 1 Cisco CSR router, 1 Cisco NEXUS and 3 IOSv routers, which added a lot of complexity to the parsing process
-    
-4. Created multiple scripts in order to practice jinja2 templates. Examples:
+
+4.Created multiple scripts in order to practice jinja2 templates. Examples:
     -> jinja2_loopbacks ->> creates one or more  loopback interfaces on multiple devices using variables defined in a YAML file
     -> bgp_practice ->> establishes neighbour relationships & advertises networks in bgp using a jinja2 template
     -> jinja_bgp_template ->> builds on the previous example ; if statement is used to only advertise next-hop-self to iBGP neighbors
