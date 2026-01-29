@@ -43,3 +43,7 @@ Project 2
     -> switches are segregated as per roles : access , distribution , core
     -> switch configuration is generated using jinja2 templates
     -> main challenge encountered with this lab was ensuring idempotency. I have used IOSv switches which do not show VLAN definition in "show run" output. As core switches are L3 switches achieving idempotency for those was much easier. Workaround for Access and Distribution layer was to segregate vlan definition and rest of config between 2 different tasks. While true idempotency could not be achieved due to the image limitation the workaround ensure as much as possible of the configuration was idempotent. I plan to play around with idempotency more in Project 3.
+
+Project 3
+
+    schimba bannerele ; sterge reporturi ; fa alte reporturi
