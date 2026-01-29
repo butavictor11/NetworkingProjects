@@ -1,0 +1,52 @@
+---
+# ===== Connection type for Cisco IOS devices =====
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: cisco.ios.ios
+
+# ===== Credentials (must match your manual SSH) =====
+ansible_user: ciscoadmin
+ansible_password: ciscoadmin123!
+
+# If your devices require enable mode to run config commands:
+#
+# ===== Force password auth (stop public key + ssh-agent) =====
+# network_cli may use Paramiko; these settings stop it trying local keys
+ansible_network_cli_ssh_type: paramiko
+ansible_paramiko_look_for_keys: false
+ansible_paramiko_allow_agent: false
+
+# ===== SSH compatibility for older IOS images =====
+# These flags are for OpenSSH when it is used. Keeping them here is fine,
+# and they help when older kex/mac/hostkey algorithms are required.
+ansible_ssh_common_args: >-
+  -oKexAlgorithms=+diffie-hellman-group1-sha1
+  -oHostKeyAlgorithms=+ssh-rsa
+  -oPubkeyAcceptedAlgorithms=+ssh-rsa
+  -oMACs=+hmac-sha1,hmac-sha1-96
+  -oCiphers=aes128-ctr,aes192-ctr,aes256-ctr
+  -oStrictHostKeyChecking=no
+  -oUserKnownHostsFile=/dev/null
+  -oPreferredAuthentications=password
+  -oPasswordAuthentication=yes
+  -oPubkeyAuthentication=no
+
+
+services:
+  ntp_server: "192.168.116.11"
+  radius_server: "192.168.116.11"
+  radius_auth_port: 1812
+  radius_acct_port: 1813
+  radius_key: "testing123"
+
+banner:
+  motd: |
+    ****************************************************
+    * UNAUTHORIZED ACCESS IS PROHIBITED                *
+    * This system is monitored and logged.             *
+    ****************************************************
+
+
+aaa:
+  group_name: "RAD-GRP"
+  server_name: "RAD1"
+ ## login_method_list: ""

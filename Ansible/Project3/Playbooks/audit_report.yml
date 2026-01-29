@@ -1,0 +1,116 @@
+---
+- name: Audit report
+  hosts: all
+  gather_facts: false
+
+  vars:
+    ntp_server: "192.168.116.11"
+    radius_server: "192.168.116.11"
+    report_root: "/home/viviboss123/Automation/Ansible/Project3/Audit_reports"
+
+  pre_tasks:
+    - name: Create timestamp
+      ansible.builtin.set_fact:
+        report_timestamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+      run_once: true
+
+    - name: Ensure folder exists for every device
+      ansible.builtin.file:
+        path: "{{report_root}}/{{ inventory_hostname }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      run_once: true
+    
+    - name: Ensure a folder exists for general audit reports
+      ansible.builtin.file:
+        path: "{{report_root}}/AggregatedReport"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      run_once: true
+
+
+  tasks:
+
+    - name: Ensure per-device folder exists (on control node)
+      ansible.builtin.file:
+        path: "{{ report_root }}/{{ inventory_hostname }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+
+    - name: Collect device config for Audit
+      cisco.ios.ios_command:
+        commands:
+          - "show run | include ^ntp server "
+          - "show run | section ^radius"
+          - "show run | include banner motd"
+      register: snips
+
+    - name: Set snips variables
+      ansible.builtin.set_fact:
+        ntp_lines: "{{snips.stdout[0] | default('')}}"
+        radius_lines: "{{snips.stdout[1] | default('')}}"
+        banner_lines: "{{snips.stdout[2] | default('')}}"
+
+    - name: Audit results
+      ansible.builtin.set_fact:
+        ntp_ok: "{{ ntp_lines is search('ntp server\\s+' ~ (ntp_server | regex_escape())) }}"
+        radius_ok: "{{ radius_lines is search('address ipv4\\s+' ~ (radius_server | regex_escape())) }}"
+        banner_ok: "{{ banner_lines is search('banner motd\\s+')}}"
+
+    - name: Write audit report
+      ansible.builtin.copy:
+        dest: "{{report_root}}/{{inventory_hostname}}/{{hostvars[play_hosts[0]].report_timestamp}}.txt"
+        mode: "0644"
+        content: |
+
+          Device: {{inventory_hostname}}
+          Timestamp : {{hostvars[play_hosts[0]].report_timestamp}}
+
+          Results:
+
+          -NTP: {{'PASS' if ntp_ok else 'FAILED'}} (expected NTP Server={{ntp_server}})
+          -Radius: {{'PASS' if radius_ok else 'FAILED'}} (expected Radius Server= {{ radius_server }})
+          -Banner: {{'PASS' if banner_ok else 'FAILED'}}
+
+          Config snippets:
+
+          NTP:
+          {{ntp_lines | default('')}} 
+
+          Radius:
+          {{radius_lines | default('')}}
+
+          Banner:
+          {{banner_lines | default('')}}
+      delegate_to: localhost
+            
+    - name: Write GLOBAL audit summary (all devices)
+      ansible.builtin.copy:
+        dest: "/home/viviboss123/Automation/Ansible/Project3/Audit_reports/AggregatedReport/summary-{{ hostvars[play_hosts[0]].report_timestamp }}.txt"
+        mode: "0644"
+        content: |
+          # Audit Summary ({{ hostvars[play_hosts[0]].report_timestamp }})
+
+          | Device | NTP | RADIUS | BANNER | Overall |
+          |---|---|---|---|---|
+          {% for h in play_hosts %}
+          | {{ h }} |
+            NTP_sever:{{ 'PASS' if (hostvars[h].ntp_ok | default(false)) else 'FAIL' }} |
+            RADIUS_server:{{ 'PASS' if (hostvars[h].radius_ok | default(false)) else 'FAIL' }} |
+            BANNER:{{ 'PASS' if (hostvars[h].banner_ok | default(false)) else 'FAIL' }} |
+            FINAL_result:{{ 'PASS' if ((hostvars[h].ntp_ok | default(false)) and (hostvars[h].radius_ok | default(false)) and (hostvars[h].banner_ok | default(false))) else 'FAIL' }} |
+          {% endfor %}
+      delegate_to: localhost
+      run_once: true
+          
+    - name: Audit verdict
+      ansible.builtin.assert:
+        that:
+          - ntp_ok
+          - radius_ok
+          - banner_ok
+        fail_msg: "Device {{ inventory_hostname }} is noncompliant"
+        success_msg: "Device {{ inventory_hostname }} is compliant"

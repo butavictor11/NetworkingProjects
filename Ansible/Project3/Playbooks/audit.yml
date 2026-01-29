@@ -1,0 +1,47 @@
+---
+- name: Audit config
+  hosts: all
+  gather_facts: false
+
+  vars:
+
+    ntp_server: "192.168.116.11"
+    radius_server: "192.168.116.11"
+    require_banner: true
+
+  tasks:
+
+    - name: Collect device config for Audit
+      cisco.ios.ios_command:
+        commands:
+          - "show run | include ^ntp server"
+          - "show run | section ^radius"
+          - "show run | include banner motd"
+      register: snips
+
+    - name: Set snipper variables
+      ansible.builtin.set_fact:
+        ntp_lines: "{{snips.stdout[0] | default('')}}"
+        radius_lines: "{{snips.stdout[1] | default('')}}"
+        banner_lines: "{{snips.stdout[2] | default('')}}"
+      
+    - name: Audit NTP 
+      ansible.builtin.assert:
+        that:
+          - ntp_lines is search("ntp server\\s+{{ntp_server | regex_escape() }}")
+        fail_msg: "NTP is noncompliant on {{ inventory_hostname }} : expected 'ntp server {{ntp_server }}' "
+        success_msg: "NTP is compliant on {{ inventory_hostname }} "
+
+    - name : Audit radius
+      ansible.builtin.assert:
+        that:
+          - radius_lines is search("address ipv4\\s+{{radius_server | regex_escape() }}")
+        fail_msg: "Radius Server is noncompliant on {{ inventory_hostname }} : expected 'radius server {{radius_server}}' "
+        success_msg: "Radius is compliant on {{ inventory_hostname }}"
+
+    - name : Audit banner motd
+      ansible.builtin.assert:
+        that:
+          - banner_lines is search("banner motd\\s+")
+        fail_msg: "MotD banner is not set on {{ inventory_hostname }}"
+        success_msg: "MotD banner is set on {{ inventory_hostname }}"

@@ -1,0 +1,21 @@
+
+Device: SW3
+Timestamp : 20260129-194004
+
+Results:
+
+-NTP: PASS (expected NTP Server=192.168.116.11)
+-Radius: PASS (expected Radius Server= 192.168.116.11)
+-Banner: FAILED
+
+Config snippets:
+
+NTP:
+ntp server 192.168.116.11 
+
+Radius:
+radius server RAD
+ address ipv4 192.168.116.11 auth-port 1812 acct-port 1813
+ key testing123
+
+Banner:

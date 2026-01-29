@@ -1,0 +1,41 @@
+---
+- name: Backup running-config from all Cisco IOS devices (per-device folders)
+  hosts: all
+  gather_facts: false
+
+  pre_tasks:
+    - name: Create one timestamp for this run (on control node)
+      ansible.builtin.set_fact:
+        backup_ts: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+      run_once: true
+
+    - name: Ensure base backups directory exists on control node
+      ansible.builtin.file:
+        path: "/home/viviboss123/Automation/Ansible/Project3/backups"
+        state: directory        ### if it does exist do nothing; if it does not exist create it 
+        mode: "0755"
+      delegate_to: localhost
+      run_once: true
+
+  tasks:
+    - name: Ensure per-device backup folder exists (on control node)
+      ansible.builtin.file:
+        path: "/home/viviboss123/Automation/Ansible/Project3/backups/{{ inventory_hostname }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+
+    - name: Get running-config from device
+      cisco.ios.ios_command:
+        commands:
+          - "show running-config"
+      register: run_cfg
+      ignore_errors: true
+
+    - name: Save running-config into per-device folder with timestamp
+      ansible.builtin.copy:
+        content: "{{ run_cfg.stdout[0] }}\n"
+        dest: "/home/viviboss123/Automation/Ansible/Project3/backups/{{ inventory_hostname }}/running-{{ hostvars[play_hosts[0]].backup_ts }}.txt"
+        mode: "0644"
+      delegate_to: localhost
+      when: run_cfg is defined and run_cfg.stdout is defined and (run_cfg.stdout | length) > 0
