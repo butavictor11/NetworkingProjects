@@ -2,15 +2,14 @@
 - name: Audit config
   hosts: all
   gather_facts: false
-
   vars:
-
     ntp_server: "192.168.116.11"
     radius_server: "192.168.116.11"
+    radius_name: "RAD"
+    radius_key:  "testing123"
     require_banner: true
-
+    remediate: true
   tasks:
-
     - name: Collect device config for Audit
       cisco.ios.ios_command:
         commands:
@@ -18,30 +17,75 @@
           - "show run | section ^radius"
           - "show run | include banner motd"
       register: snips
-
     - name: Set snipper variables
       ansible.builtin.set_fact:
-        ntp_lines: "{{snips.stdout[0] | default('')}}"
-        radius_lines: "{{snips.stdout[1] | default('')}}"
-        banner_lines: "{{snips.stdout[2] | default('')}}"
-      
-    - name: Audit NTP 
-      ansible.builtin.assert:
-        that:
-          - ntp_lines is search("ntp server\\s+{{ntp_server | regex_escape() }}")
-        fail_msg: "NTP is noncompliant on {{ inventory_hostname }} : expected 'ntp server {{ntp_server }}' "
-        success_msg: "NTP is compliant on {{ inventory_hostname }} "
+        ntp_lines: "{{ snips.stdout[0] | default('') }}"
+        radius_lines: "{{ snips.stdout[1] | default('') }}"
+        banner_lines: "{{ snips.stdout[2] | default('') }}"
+    - name: Compute compliance flags
+      ansible.builtin.set_fact:
+        ntp_ok: "{{ ntp_lines is search('ntp server\\s+' ~ (ntp_server | regex_escape())) }}"
+        radius_ok: "{{ radius_lines is search('address ipv4\\s+' ~ (radius_server | regex_escape())) }}"
+        banner_ok: "{{ banner_lines is search('banner motd\\s+') }}"
+    - name: Audit verdicts pre remediation
+      ansible.builtin.debug:
+        msg:
+          - "NTP Compliant? {{ ntp_ok }}"
+          - "Radius Compliant? {{ radius_ok }}"
+          - "Banned compliant? {{ banner_ok }}"
+    - name: Parse ntp config
+      ansible.builtin.set_fact:
+          ntp_servers:  "{{ ntp_lines | regex_findall('(?m)^ntp server\\s+(\\S+)') }}"
+      when: remediate
+    - name: Remove unwanted NTP servers
+      cisco.ios.ios_config:
+        lines: "{{ (ntp_servers | difference([ntp_server])) | map('regex_replace', '^(.*)$', 'no ntp server \\1') | list }}"
+      when: remediate and ((ntp_servers | difference([ntp_server]) | length > 0))
+    - name: Remediate with NTP correct NTP server
+      cisco.ios.ios_config:
+        lines: 
+          - "ntp server {{ ntp_server  }}"
+        match: line
+      when: remediate and (not ntp_ok)
+    - name: Find all Radius servers
+      ansible.builtin.set_fact:
+        radius_names_found: "{{ radius_lines | regex_findall('(?m)^radius server\\s+(\\S+)') | unique }}"
+      when: remediate 
+    - name: Determine which RADIUS server names point to the allowed IP (keep list)
+      ansible.builtin.set_fact:
+        radius_names_keep: >-
+          {{
+            radius_lines
+            | regex_findall(
+                '(?ms)^radius server\s+(\S+).*?address ipv4\s+'
+                ~ (radius_server | regex_escape)
+                ~ '\b'
+              )
+            | unique
+          }}
+      when: remediate
 
-    - name : Audit radius
-      ansible.builtin.assert:
-        that:
-          - radius_lines is search("address ipv4\\s+{{radius_server | regex_escape() }}")
-        fail_msg: "Radius Server is noncompliant on {{ inventory_hostname }} : expected 'radius server {{radius_server}}' "
-        success_msg: "Radius is compliant on {{ inventory_hostname }}"
+    - name: Find out which servers to remove
+      ansible.builtin.set_fact:
+        radius_remove: "{{ (radius_names_found | default([])) | difference(radius_names_keep | default([])) }}"
+      when: remediate
 
-    - name : Audit banner motd
-      ansible.builtin.assert:
-        that:
-          - banner_lines is search("banner motd\\s+")
-        fail_msg: "MotD banner is not set on {{ inventory_hostname }}"
-        success_msg: "MotD banner is set on {{ inventory_hostname }}"
+    - name: Print radius lists
+      ansible.builtin.debug:
+        msg:
+          - "FOUND: {{ radius_names_found | default([]) }}"
+          - "KEEP : {{ radius_names_keep | default([]) }}"
+          - "REMOVE: {{ radius_remove | default([]) }}"
+      when: remediate
+
+    - name: Making sure main radius is configured
+      cisco.ios.ios_config:
+        parents:
+          - "radius server {{ radius_name }}"
+        lines:
+          - "address ipv4 {{ radius_server }} auth-port 1812 acct-port 1813"
+          - "key {{ radius_key }}"
+    - name: Remove unwanted RADIUS servers
+      cisco.ios.ios_config:
+        lines: "{{ radius_remove | map('regex_replace', '^(.*)$', 'no radius server \\1') | list }}"
+      when: remediate and ((radius_remove | default([])) | length > 0)

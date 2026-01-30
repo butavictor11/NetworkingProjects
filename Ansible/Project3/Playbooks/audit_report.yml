@@ -9,22 +9,21 @@
     report_root: "/home/viviboss123/Automation/Ansible/Project3/Audit_reports"
 
   pre_tasks:
-    - name: Create timestamp
+    - name: Create timestamp                 # noqa: run-once
       ansible.builtin.set_fact:
         report_timestamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
       run_once: true
 
-    - name: Ensure folder exists for every device
+    - name: Ensure folder exists for every device     # noqa: run-once
       ansible.builtin.file:
-        path: "{{report_root}}/{{ inventory_hostname }}"
+        path: "{{ report_root }}/{{ inventory_hostname }}"
         state: directory
         mode: "0755"
       delegate_to: localhost
       run_once: true
-    
-    - name: Ensure a folder exists for general audit reports
+    - name: Ensure a folder exists for general audit reports  # noqa: run-once
       ansible.builtin.file:
-        path: "{{report_root}}/AggregatedReport"
+        path: "{{ report_root }}/AggregatedReport"
         state: directory
         mode: "0755"
       delegate_to: localhost
@@ -50,9 +49,9 @@
 
     - name: Set snips variables
       ansible.builtin.set_fact:
-        ntp_lines: "{{snips.stdout[0] | default('')}}"
-        radius_lines: "{{snips.stdout[1] | default('')}}"
-        banner_lines: "{{snips.stdout[2] | default('')}}"
+        ntp_lines: "{{ snips.stdout[0] | default('')}}"
+        radius_lines: "{{ snips.stdout[1] | default('')}}"
+        banner_lines: "{{ snips.stdout[2] | default('')}}"
 
     - name: Audit results
       ansible.builtin.set_fact:
@@ -62,32 +61,31 @@
 
     - name: Write audit report
       ansible.builtin.copy:
-        dest: "{{report_root}}/{{inventory_hostname}}/{{hostvars[play_hosts[0]].report_timestamp}}.txt"
+        dest: "{{ report_root }}/{{inventory_hostname}}/{{hostvars[play_hosts[0]].report_timestamp}}.txt"
         mode: "0644"
         content: |
 
-          Device: {{inventory_hostname}}
-          Timestamp : {{hostvars[play_hosts[0]].report_timestamp}}
+          Device: {{ inventory_hostname }}
+          Timestamp : {{ hostvars[play_hosts[0]].report_timestamp }}
 
           Results:
 
-          -NTP: {{'PASS' if ntp_ok else 'FAILED'}} (expected NTP Server={{ntp_server}})
-          -Radius: {{'PASS' if radius_ok else 'FAILED'}} (expected Radius Server= {{ radius_server }})
-          -Banner: {{'PASS' if banner_ok else 'FAILED'}}
+          -NTP: {{ 'PASS' if ntp_ok else 'FAILED' }} (expected NTP Server={{ ntp_server }})
+          -Radius: {{ 'PASS' if radius_ok else 'FAILED' }} (expected Radius Server= {{ radius_server }})
+          -Banner: {{ 'PASS' if banner_ok else 'FAILED' }}
 
           Config snippets:
 
           NTP:
-          {{ntp_lines | default('')}} 
+          {{ ntp_lines | default('') }}
 
           Radius:
-          {{radius_lines | default('')}}
+          {{ radius_lines | default('') }}
 
           Banner:
-          {{banner_lines | default('')}}
+          {{ banner_lines | default('') }}
       delegate_to: localhost
-            
-    - name: Write GLOBAL audit summary (all devices)
+    - name: Write GLOBAL audit summary (all devices)    # noqa: run-once
       ansible.builtin.copy:
         dest: "/home/viviboss123/Automation/Ansible/Project3/Audit_reports/AggregatedReport/summary-{{ hostvars[play_hosts[0]].report_timestamp }}.txt"
         mode: "0644"
@@ -105,7 +103,6 @@
           {% endfor %}
       delegate_to: localhost
       run_once: true
-          
     - name: Audit verdict
       ansible.builtin.assert:
         that:

@@ -1,0 +1,24 @@
+# Audit Summary (20260130-124758)
+
+| Device | NTP | RADIUS | BANNER | Overall |
+|---|---|---|---|---|
+| R2 |
+  NTP_sever:PASS |
+  RADIUS_server:PASS |
+  BANNER:FAIL |
+  FINAL_result:FAIL |
+| SW3 |
+  NTP_sever:PASS |
+  RADIUS_server:PASS |
+  BANNER:FAIL |
+  FINAL_result:FAIL |
+| SW4 |
+  NTP_sever:PASS |
+  RADIUS_server:PASS |
+  BANNER:FAIL |
+  FINAL_result:FAIL |
+| SW5 |
+  NTP_sever:PASS |
+  RADIUS_server:PASS |
+  BANNER:FAIL |
+  FINAL_result:FAIL |
