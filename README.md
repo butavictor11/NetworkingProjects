@@ -1,5 +1,5 @@
 
-Here I will store various networking automations project as I develop my skills in this area.
+Here I will store various networking projects as I delevelop new skills.
 
 Projects done so far:
 
