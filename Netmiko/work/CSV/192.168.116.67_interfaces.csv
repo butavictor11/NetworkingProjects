@@ -1,0 +1,13 @@
+interface,status,description,mac,comments
+Gi0/0,up,nu am nici 2 lei de tigari,5000.0006.0000,
+Gi0/1,up,juju,5000.0006.0001,
+Gi0/2,up,mumu,5000.0006.0002,
+Gi0/3,up,pupu,5000.0006.0003,
+Gi1/0,up,,5000.0006.0004,
+Gi1/1,admin down,,5000.0006.0005,shutdown
+Gi1/2,admin down,,5000.0006.0006,shutdown
+Gi1/3,admin down,,5000.0006.0007,shutdown
+
+
+
+show inventory
