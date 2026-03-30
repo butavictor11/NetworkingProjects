@@ -1,6 +1,17 @@
 This project documents a hands-on Versa SD-WAN lab built in EVE-NG to simulate a regional airport-style hub-and-spoke deployment.
 
 The lab was designed to demonstrate how centralized infrastructure services, customer segmentation, and resilient SD-WAN architecture can be combined in a realistic multi-tenant environment. It includes redundant hub design, centralized authentication, centralized NTP, dual transport underlays, and validation of failover behavior.
+<img width="991" height="721" alt="image" src="https://github.com/user-attachments/assets/83010b2b-6bfb-4bb0-9048-859898e249b1" />
+
+
+
+
+
+
+
+
+
+
 
 A key part of the design is the use of three suborganisations at each site, with each suborganisation representing a different customer tenant. This allowed the lab to model shared SD-WAN infrastructure delivered by a service provider while maintaining logical separation between customers.
 
@@ -29,8 +40,6 @@ The main focus of the lab was to build and validate:
 - study scalability and ease of deployement of Versa SD-WAN using templates
 
 
-Topology diagram:
-<img width="981" height="683" alt="image" src="https://github.com/user-attachments/assets/74475cc1-5324-4fff-af0e-f0402e764367" />
 
 My topology is separated into:
 1. Versa Headend
