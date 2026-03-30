@@ -1,0 +1,38 @@
+
+                                                            NTP
+HUB1=10.2.2.3
+HUB2=10.2.2.4
+Schiphol_Edge=10.22.22.1
+Frankfurt_Edge=10.23.23.1
+Services operate under a Management VRF.
+
+user@ubuntu22-server:~$ sudo chronyc clients
+[sudo] password for user:
+Hostname                      NTP   Drop Int IntL Last     Cmd   Drop Int  Last
+===============================================================================
+10.2.2.4                       19      0   6   -    28       0      0   -     -
+10.2.2.3                       25      0   6   -    37       0      0   -     -
+10.23.23.1                     16      0   6   -    16       0      0   -     -
+10.22.22.1                     15      0   6   -    40       0      0   -     -
+
+                                                            
+                                                            Radius
+
+
+
+user@ubuntu22-server:~$ sudo tcpdump -ni any udp port 1812 or udp port 1813
+tcpdump: data link type LINUX_SLL2
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on any, link-type LINUX_SLL2 (Linux cooked v2), snapshot length 262144 bytes
+14:25:20.906115 ens3  In  IP 10.23.23.1.50962 > 10.2.2.2.1812: RADIUS, Access-Request (1), id: 0x5c length: 78
+14:25:20.906839 ens3  Out IP 10.2.2.2.1812 > 10.23.23.1.50962: RADIUS, Access-Accept (2), id: 0x5c length: 50
+14:25:40.772486 ens3  In  IP 10.22.22.1.18562 > 10.2.2.2.1812: RADIUS, Access-Request (1), id: 0xc5 length: 78
+14:25:40.773362 ens3  Out IP 10.2.2.2.1812 > 10.22.22.1.18562: RADIUS, Access-Accept (2), id: 0xc5 length: 50
+14:25:52.036952 ens3  In  IP 10.2.2.3.45212 > 10.2.2.2.1812: RADIUS, Access-Request (1), id: 0xb0 length: 77
+14:25:52.037561 ens3  Out IP 10.2.2.2.1812 > 10.2.2.3.45212: RADIUS, Access-Accept (2), id: 0xb0 length: 64
+14:26:01.204744 ens3  In  IP 10.2.2.4.9895 > 10.2.2.2.1812: RADIUS, Access-Request (1), id: 0x62 length: 77
+14:26:01.205206 ens3  Out IP 10.2.2.2.1812 > 10.2.2.4.9895: RADIUS, Access-Accept (2), id: 0x62 length: 64
+
+
+
+
