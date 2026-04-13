@@ -1,7 +1,7 @@
 
 In this repo I will document various personal project along my network engineering journey.
 
-The project are separated into 3 different directories: Ansible,Netmiko and Versa_SDWAN.
+The project are separated into multiple directories as per area of interest.
 
 Versa Projects:
   -> HUB & spoke Versa SD-WAN deployement applied to the aviation industries. 
@@ -19,6 +19,9 @@ Python Scripts:
   -> Loopback interface creation Script
   -> Script that pulls inventory and stores it into CSV file
   -> Scripts that interact with Jinja2 Templates
+
+Protocol independent multicast project:
+  ->Here I implement Sparse Mode PIM, Bidirectional PIM and SSM.
       
 
 
