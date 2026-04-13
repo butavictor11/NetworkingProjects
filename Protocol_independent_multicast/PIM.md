@@ -18,11 +18,13 @@ I will configure R2's loopback 0 as redundant RP(priority 100) for group 239.1.1
 Bidirectional pim :
 (*,239.2.2.2), 00:48:07/-, RP 33.33.33.33, flags: BC
 Bidir-Upstream: GigabitEthernet0/2, RPF nbr: 10.0.4.2
+
 Incoming interface:
  GigabitEthernet0/1, Accepting/Sparse
  GigabitEthernet0/0, Accepting/Sparse
  Loopback0, Accepting/Sparse
  GigabitEthernet0/2, Accepting/Sparse
+
 Outgoing interface list:
  GigabitEthernet0/1, Forward/Sparse, 00:45:21/00:03:25, p
  GigabitEthernet0/0, Forward/Sparse, 00:45:43/00:02:31
@@ -36,14 +38,18 @@ Outgoing interface list:
  GigabitEthernet0/2, Forward/Sparse, 00:48:24/00:03:03
 
 (10.0.0.10, 239.1.1.1), 00:02:04/00:00:54, flags: FT
+
 Incoming interface: GigabitEthernet0/0, RPF nbr 0.0.0.0, Registering
+
 Outgoing interface list:
  GigabitEthernet0/1, Forward/Sparse, 00:02:04/00:03:22
  GigabitEthernet0/2, Forward/Sparse, 00:02:04/00:03:22
 
  SSM ->
 (10.0.0.10, 232.1.1.1), 00:10:43/00:02:44, flags: sT
+
 Incoming interface: GigabitEthernet0/0, RPF nbr 0.0.0.0
+
 Outgoing interface list:
  GigabitEthernet0/2, Forward/Sparse, 00:06:40/00:02:44
  GigabitEthernet0/1, Forward/Sparse, 00:10:43/00:02:35
