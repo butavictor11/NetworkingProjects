@@ -145,12 +145,12 @@ The projects are split into two main areas:
 
 ### Ansible Projects
 
-The Ansible projects focus on building repeatable automation workflows using playbooks, roles/tasks, YAML variables, and Jinja2 templates.
+The Ansible projects focus on building repeatable automation workflows using playbooks, separated task files, YAML variables, and Jinja2 templates.
 
 | Project | Description |
 |---|---|
 | Basic Ansible Playbooks | Introductory playbooks for collecting device information, configuring loopbacks, and backing up configurations |
-| Campus LAN Automation | Builds a functional three-tier campus design using Ansible, separated task files, YAML variables, and Jinja2 templates |
+| Three-Tier Campus LAN Automation | Builds a functional three-tier campus design using Ansible, separated task files, YAML variables, and Jinja2 templates |
 | Compliance Audit and Remediation | Audits RADIUS, NTP, and login banner configuration across multiple devices; if a device fails the audit, remediation is applied and the audit is run again |
 
 Key Ansible work:
@@ -158,10 +158,12 @@ Key Ansible work:
 - `version.yml` collects `show version` and `show inventory` from multiple devices.
 - `loopbacks.yml` creates loopback interfaces and assigns IP addresses using variable files.
 - `backup.yml` saves timestamped running configuration backups.
-- Campus LAN automation separates playbook logic into reusable task files.
-- Jinja2 templates are used to generate a three-tier campus configuration.
-- Compliance automation validates RADIUS, NTP, and banner configuration.
+- Campus LAN automation uses separated task files for cleaner playbook structure.
+- Jinja2 templates generate a functional three-tier campus LAN configuration.
+- Campus automation includes VLANs, SVIs, trunks, access ports, interface descriptions, and variable-driven configuration.
+- Compliance automation validates RADIUS, NTP, and login banner configuration across multiple devices.
 - Failed audit checks trigger remediation.
+- The audit is run again after remediation to confirm compliance.
 - Aggregate and per-device reports are generated after every audit run.
 
 Skills demonstrated:
@@ -173,7 +175,7 @@ Skills demonstrated:
 | YAML | Structured input data for repeatable automation |
 | Compliance | Audit, remediation, re-check workflow |
 | Reporting | Aggregate and per-device audit reports |
-| Campus Design | Three-tier campus LAN configuration |
+| Campus Design | VLANs, trunks, access ports, SVIs, three-tier campus LAN configuration |
 
 ---
 
@@ -186,7 +188,7 @@ The Python and Netmiko projects focus on SSH-based network automation, data coll
 | `Inventory/inventory.py` | Collects hostname, operating system, software version, and uptime information from multiple devices and exports the results to a CSV file |
 | `ConfigBackup/config_backup.py` | Collects running configurations from multiple devices and saves each configuration into a separate backup file |
 | `bgp_practice/bgp_practice.py` | Uses Jinja2 templates and Netmiko to configure BGP neighbor relationships and advertise networks between devices |
-| `BGP/bgp_config.py` | Uses YAML variables, Jinja2 templates, and Netmiko to build a more advanced BGP configuration workflow, including route reflectors and policy-based traffic steering |
+| `BGP/bgp_config.py` | Uses YAML variables, Jinja2 templates, and Netmiko to build a more advanced BGP automation workflow, including route reflector configuration and policy-based traffic steering |
 
 Skills demonstrated:
 
@@ -198,6 +200,8 @@ Skills demonstrated:
 | YAML | Structured variables for routing configuration |
 | BGP Automation | Neighbor creation, network advertisement, route reflector configuration, traffic engineering |
 | Operations | Inventory collection and configuration backup automation |
+
+---
 
 ## Protocol Independent Multicast Labs
 
@@ -227,34 +231,6 @@ The labs implement and validate different multicast models.
 
 ---
 
-## Campus LAN Automation
-
-**Project path:** `automation/ansible/` or related campus LAN folder
-
-This project focuses on automating a campus LAN configuration using Ansible, YAML variables, and Jinja2 templates.
-
-### Key Features
-
-- VLAN creation
-- SVI configuration
-- Access port configuration
-- Trunk port configuration
-- Interface descriptions
-- Variable-driven configuration
-- Jinja2-based template rendering
-- Ansible-based deployment
-
-### Skills Demonstrated
-
-| Area | Skills |
-|---|---|
-| Campus Switching | VLANs, trunks, access ports, SVIs |
-| Automation | Ansible, YAML variables, Jinja2 templates |
-| Configuration Design | Separating data from templates |
-| Repeatability | Reusable configuration generation |
-
----
-
 # Repository Structure
 
 ```text
@@ -269,69 +245,3 @@ NetworkingProjects/
 ├── routing/
 │   └── multicast/
 └── README.md
-```
-
-Folder names may evolve as projects are improved and reorganized.
-
----
-
-# Skills Demonstrated Across This Repository
-
-| Category | Technologies / Concepts |
-|---|---|
-| SD-WAN | Versa SD-WAN, Director, Controller, Analytics, VOS, SLA-based forwarding, internet breakout |
-| Network Security | Palo Alto NGFW, User-ID, GlobalProtect, IPsec VPN, NAT, DMZ, identity-based policy |
-| Automation | Ansible, Python, Netmiko, Jinja2, YAML, CSV |
-| Routing | Static routing, overlay routing, multicast routing |
-| Switching | VLANs, trunks, SVIs, campus LAN design |
-| VPN | Site-to-site IPsec, remote access VPN |
-| Services | RADIUS, NTP, centralized services |
-| Validation | Traffic logs, traceroute, ping, policy testing, SLA failover testing |
-| Lab Platforms | EVE-NG, virtual routers, virtual firewalls, virtual SD-WAN appliances |
-
----
-
-# Why This Repository Matters
-
-This repository is meant to show how I approach network engineering projects from design to validation.
-
-My general workflow is:
-
-1. Define a realistic scenario.
-2. Build the lab topology.
-3. Configure the required network/security/automation components.
-4. Validate the expected behavior.
-5. Document the design, results, and lessons learned.
-
-The focus is not only on configuration, but also on proving that the configuration works.
-
-Examples include:
-
-- Showing traffic path behavior with traceroute
-- Validating SD-WAN transport failover after SLA violations
-- Proving internet breakout behavior per tenant
-- Confirming User-ID based access control with firewall logs
-- Using automation to generate backups, inventory reports, and configuration snippets
-
----
-
-# Notes
-
-Some projects are more mature than others.
-
-Newer projects include better documentation, diagrams, screenshots, validation matrices, and evidence folders. Older projects may be improved over time as I rebuild or expand them.
-
-Where full configuration exports are not available, the documentation focuses on architecture, implementation approach, and available validation evidence.
-
----
-
-# Current Focus
-
-My current focus areas are:
-
-- Network security engineering
-- Palo Alto NGFW design and operations
-- SD-WAN architecture
-- Network automation
-- Realistic lab documentation for portfolio projects
-
