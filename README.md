@@ -1,28 +1,312 @@
+# Networking Projects Portfolio
 
-In this repo I will document various personal project along my network engineering journey.
+This repository documents a collection of hands-on networking, network security, SD-WAN, multicast, and automation projects built throughout my network engineering journey.
 
-The project are separated into multiple directories as per area of interest.
+The goal of this repository is to show practical engineering ability through realistic lab scenarios, clear documentation, diagrams, screenshots, validation outputs, and configuration examples where available.
 
-Versa Projects:
-  -> HUB & spoke Versa SD-WAN deployement applied to the aviation industries. 
+The projects are organized by technology area and focus on both implementation and verification.
 
-Ansible Projects:
-  -> Introductive Ansible project that consits of 3 Ansiblet playbooks:
-      i)version.yml prints output of show version & show inventory from multiple devices
-      ii)loopbacks.yml creates loopbacks interfaces and sets ip addresses based on varibles file
-      iii)backup.yml saves back-up of running config and timestamps it
-  -> Fully configure CAMPUS_LAN via Ansible using yaml variables and Jinja2 templates
+---
 
+## About This Repository
 
-Python Scripts:
-  -> Configuration Backup Script
-  -> Loopback interface creation Script
-  -> Script that pulls inventory and stores it into CSV file
-  -> Scripts that interact with Jinja2 Templates
+This repository is built around practical network engineering projects, not theory-only notes.
 
-Protocol independent multicast project:
-  ->Here I implement Sparse Mode PIM, Bidirectional PIM and SSM.
-      
+Each project is intended to show:
 
+- The problem or scenario being simulated
+- The topology and design choices
+- The technologies configured
+- The validation method used to prove the lab works
+- Screenshots, command outputs, diagrams, or documentation where available
 
+Some older projects may have fewer screenshots or configuration exports than newer projects. Newer projects are documented more thoroughly with diagrams, matrices, traffic validation, and evidence-based README files.
+
+---
+
+## Project Areas
+
+| Area | Focus |
+|---|---|
+| SD-WAN | Versa SD-WAN, hub-and-spoke design, multi-tenancy, SLA-based forwarding, internet breakout, centralized services |
+| Network Security | Palo Alto NGFW, User-ID, GlobalProtect, IPsec VPN, NAT, DMZ publishing, identity-based access control |
+| Automation | Ansible, Python, Netmiko, Jinja2, YAML, configuration backups, inventory collection, templated deployments |
+| Routing & Multicast | PIM Sparse Mode, Bidirectional PIM, Source-Specific Multicast |
+| Campus Networking | VLANs, SVIs, trunking, routed access, campus LAN automation |
+
+---
+
+# Featured Projects
+
+## Versa SD-WAN Multi-Tenant Airline Connectivity Lab
+
+**Project path:** `sd-wan/versa-sdwan/`
+
+This project simulates a managed multi-tenant SD-WAN environment for airline connectivity across multiple airport locations.
+
+The lab is built around a regional hub in Brussels that provides SD-WAN connectivity and centralized services to three fictional airline tenants operating from Schiphol and Frankfurt airport sites.
+
+### Scenario
+
+Three airline tenants share the same Versa SD-WAN platform but have different connectivity and internet breakout requirements.
+
+| Tenant | Connectivity Model | Internet Breakout |
+|---|---|---|
+| Dutch Airways | Spoke-to-hub only | Centralized through Brussels hub |
+| German Airways | Spoke-to-spoke via Brussels hub | Centralized through Brussels hub |
+| French Airways | Spoke-to-hub only | Local DIA at each airport |
+
+### Key Features
+
+- Versa Director, Controller, and Analytics
+- Versa VOS appliances
+- Brussels regional hub
+- Two VOS edge devices at the hub for redundancy
+- Schiphol and Frankfurt airport spoke sites
+- Airline tenants implemented as Versa suborganizations
+- MPLS and Internet transport underlays
+- SLA-based forwarding and failover
+- MPLS preferred for private traffic
+- Internet transport used when SLA conditions are breached
+- Centralized internet breakout for Dutch Airways and German Airways
+- Local DIA breakout for French Airways
+- Centralized RADIUS and NTP services at the hub
+- Security features including decryption profile, antivirus profile, and zone protection
+- Validation evidence for breakout behavior, failover, SLA violations, and centralized services
+
+### Skills Demonstrated
+
+| Area | Skills |
+|---|---|
+| SD-WAN Design | Hub-and-spoke architecture, dual transports, SLA-based forwarding |
+| Versa SD-WAN | Director, Controller, Analytics, VOS edges, forwarding profiles, policies |
+| Multi-Tenancy | Tenant separation using Versa suborganizations |
+| Resiliency | Redundant VOS edge design at the regional hub |
+| Internet Breakout | Centralized breakout and local DIA models |
+| Security | Decryption, antivirus, zone protection, security policies |
+| Operations | RADIUS, NTP, monitoring, validation, troubleshooting |
+
+---
+
+## Palo Alto Zero Trust Enterprise Access Lab
+
+**Project path:** `network-security/palo-alto-enterprise-security-lab/`
+
+This project is a Palo Alto Networks NGFW lab focused on enterprise access control, remote access, NAT, VPN connectivity, and identity-based security policy enforcement.
+
+The lab simulates an enterprise environment with an HQ site, branch connectivity, DMZ application publishing, Active Directory integration, User-ID, LDAP group mapping, GlobalProtect, and IPsec VPN.
+
+### Scenario
+
+The project focuses on building a more realistic enterprise security design where users are not allowed access only because they are in the correct subnet or zone. Instead, access is controlled using identity, group membership, source zone, destination zone, and required service.
+
+### Key Features
+
+- Palo Alto NGFW in EVE-NG
+- HQ and branch firewall design
+- Site-to-site IPsec VPN
+- GlobalProtect remote access VPN
+- Active Directory / LDAP integration
+- User-ID mapping
+- LDAP group mapping
+- Identity-based firewall policies
+- Source NAT for outbound internet access
+- Destination NAT for DMZ application publishing
+- DMZ application access validation
+- Security policy allow/deny testing
+- Traffic logs proving user-based policy enforcement
+
+### Skills Demonstrated
+
+| Area | Skills |
+|---|---|
+| Firewall Design | Zones, interfaces, policies, routing, NAT |
+| Identity Security | User-ID, LDAP group mapping, identity-based access control |
+| Remote Access | GlobalProtect VPN |
+| VPN | Site-to-site IPsec between HQ and branch |
+| NAT | Source NAT and Destination NAT |
+| DMZ Design | Published application behind firewall |
+| Validation | Traffic logs, policy match testing, allowed/denied access verification |
+
+---
+
+## Network Automation Projects
+
+**Project path:** `automation/`
+
+This area contains Ansible and Python/Netmiko projects focused on automating common network engineering tasks.
+
+The goal is to move beyond manual CLI work and build repeatable workflows for collecting information, backing up configurations, provisioning interfaces, and generating templated configurations.
+
+### Ansible Projects
+
+The Ansible work includes introductory and practical playbooks for multi-device automation.
+
+| Playbook | Purpose |
+|---|---|
+| `version.yml` | Collects `show version` and `show inventory` from multiple devices |
+| `loopbacks.yml` | Creates loopback interfaces and assigns IP addresses using variable files |
+| `backup.yml` | Saves timestamped running configuration backups |
+
+Additional work includes a campus LAN automation project using YAML variables and Jinja2 templates.
+
+### Python / Netmiko Scripts
+
+Python scripts were created for common operational workflows.
+
+| Script Type | Purpose |
+|---|---|
+| Configuration backup | Connects to devices and saves running configurations |
+| Loopback creation | Creates loopback interfaces using Netmiko |
+| Inventory collection | Pulls device information and stores it in CSV |
+| Jinja2 interaction | Renders configuration templates from structured data |
+
+### Skills Demonstrated
+
+| Area | Skills |
+|---|---|
+| Ansible | Playbooks, inventory, variables, command execution, configuration tasks |
+| Python | Scripting, file handling, CSV output, workflow automation |
+| Netmiko | SSH to network devices, command collection, config deployment |
+| Jinja2 | Template-based configuration generation |
+| YAML | Structured variables |
+| Automation Design | Repeatable backups, inventory collection, templated deployment |
+
+---
+
+## Protocol Independent Multicast Labs
+
+**Project path:** `routing/multicast/`
+
+This project area focuses on multicast routing concepts and Protocol Independent Multicast behavior.
+
+The labs implement and validate different multicast models.
+
+### Implemented Multicast Modes
+
+| Mode | Description |
+|---|---|
+| PIM Sparse Mode | RP-based multicast forwarding model |
+| Bidirectional PIM | Shared-tree multicast model for many-to-many communication |
+| Source-Specific Multicast | Source-aware multicast forwarding model |
+
+### Skills Demonstrated
+
+| Area | Skills |
+|---|---|
+| Multicast Routing | PIM behavior, multicast forwarding, receiver/source validation |
+| PIM Sparse Mode | RP-based shared tree operation |
+| Bidirectional PIM | Many-to-many multicast communication model |
+| SSM | Source-specific multicast behavior |
+| Troubleshooting | PIM neighbors, multicast routing table, traffic validation |
+
+---
+
+## Campus LAN Automation
+
+**Project path:** `automation/ansible/` or related campus LAN folder
+
+This project focuses on automating a campus LAN configuration using Ansible, YAML variables, and Jinja2 templates.
+
+### Key Features
+
+- VLAN creation
+- SVI configuration
+- Access port configuration
+- Trunk port configuration
+- Interface descriptions
+- Variable-driven configuration
+- Jinja2-based template rendering
+- Ansible-based deployment
+
+### Skills Demonstrated
+
+| Area | Skills |
+|---|---|
+| Campus Switching | VLANs, trunks, access ports, SVIs |
+| Automation | Ansible, YAML variables, Jinja2 templates |
+| Configuration Design | Separating data from templates |
+| Repeatability | Reusable configuration generation |
+
+---
+
+# Repository Structure
+
+```text
+NetworkingProjects/
+├── sd-wan/
+│   └── versa-sdwan/
+├── network-security/
+│   └── palo-alto-enterprise-security-lab/
+├── automation/
+│   ├── ansible/
+│   └── python/
+├── routing/
+│   └── multicast/
+└── README.md
+```
+
+Folder names may evolve as projects are improved and reorganized.
+
+---
+
+# Skills Demonstrated Across This Repository
+
+| Category | Technologies / Concepts |
+|---|---|
+| SD-WAN | Versa SD-WAN, Director, Controller, Analytics, VOS, SLA-based forwarding, internet breakout |
+| Network Security | Palo Alto NGFW, User-ID, GlobalProtect, IPsec VPN, NAT, DMZ, identity-based policy |
+| Automation | Ansible, Python, Netmiko, Jinja2, YAML, CSV |
+| Routing | Static routing, overlay routing, multicast routing |
+| Switching | VLANs, trunks, SVIs, campus LAN design |
+| VPN | Site-to-site IPsec, remote access VPN |
+| Services | RADIUS, NTP, centralized services |
+| Validation | Traffic logs, traceroute, ping, policy testing, SLA failover testing |
+| Lab Platforms | EVE-NG, virtual routers, virtual firewalls, virtual SD-WAN appliances |
+
+---
+
+# Why This Repository Matters
+
+This repository is meant to show how I approach network engineering projects from design to validation.
+
+My general workflow is:
+
+1. Define a realistic scenario.
+2. Build the lab topology.
+3. Configure the required network/security/automation components.
+4. Validate the expected behavior.
+5. Document the design, results, and lessons learned.
+
+The focus is not only on configuration, but also on proving that the configuration works.
+
+Examples include:
+
+- Showing traffic path behavior with traceroute
+- Validating SD-WAN transport failover after SLA violations
+- Proving internet breakout behavior per tenant
+- Confirming User-ID based access control with firewall logs
+- Using automation to generate backups, inventory reports, and configuration snippets
+
+---
+
+# Notes
+
+Some projects are more mature than others.
+
+Newer projects include better documentation, diagrams, screenshots, validation matrices, and evidence folders. Older projects may be improved over time as I rebuild or expand them.
+
+Where full configuration exports are not available, the documentation focuses on architecture, implementation approach, and available validation evidence.
+
+---
+
+# Current Focus
+
+My current focus areas are:
+
+- Network security engineering
+- Palo Alto NGFW design and operations
+- SD-WAN architecture
+- Network automation
+- Realistic lab documentation for portfolio projects
 
