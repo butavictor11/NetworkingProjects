@@ -31,7 +31,7 @@ Some older projects may have fewer screenshots or configuration exports than new
 | SD-WAN | Versa SD-WAN, hub-and-spoke design, multi-tenancy, SLA-based forwarding, internet breakout, centralized services |
 | Network Security | Palo Alto NGFW, User-ID, GlobalProtect, IPsec VPN, NAT, DMZ publishing, identity-based access control |
 | Automation | Ansible, Python, Netmiko, Jinja2, YAML, configuration backups, inventory collection, templated deployments |
-| Routing & Multicast | PIM Sparse Mode, Bidirectional PIM, Source-Specific Multicast |
+| Multicast | PIM Sparse Mode, Bidirectional PIM, Source-Specific Multicast |
 | Campus Networking | VLANs, SVIs, trunking, routed access, campus LAN automation |
 
 ---
@@ -132,7 +132,7 @@ The project focuses on building a more realistic enterprise security design wher
 
 ## Network Automation Projects
 
-**Project path:** `automation/`
+**Project path:** `network-automation/`
 
 This area contains Ansible and Python/Netmiko projects focused on automating common network engineering tasks such as configuration deployment, compliance auditing, inventory collection, configuration backups, and template-based routing configuration.
 
@@ -205,7 +205,7 @@ Skills demonstrated:
 
 ## Protocol Independent Multicast Labs
 
-**Project path:** `routing/multicast/`
+**Project path:** `multicast/`
 
 This project area focuses on multicast routing concepts and Protocol Independent Multicast behavior.
 
@@ -239,9 +239,73 @@ NetworkingProjects/
 │   └── versa-sdwan/
 ├── network-security/
 │   └── palo-alto-enterprise-security-lab/
-├── automation/
+├── network-automation/
 │   ├── ansible/
 │   └── python/
-├── routing/
-│   └── multicast/
+├── multicast/
 └── README.md
+```
+
+Folder names may evolve as projects are improved and reorganized.
+
+---
+
+# Skills Demonstrated Across This Repository
+
+| Category | Technologies / Concepts |
+|---|---|
+| SD-WAN | Versa SD-WAN, Director, Controller, Analytics, VOS, SLA-based forwarding, internet breakout |
+| Network Security | Palo Alto NGFW, User-ID, GlobalProtect, IPsec VPN, NAT, DMZ, identity-based policy |
+| Automation | Ansible, Python, Netmiko, Jinja2, YAML, CSV |
+| Multicast | PIM Sparse Mode, Bidirectional PIM, Source-Specific Multicast |
+| Switching | VLANs, trunks, SVIs, campus LAN design |
+| VPN | Site-to-site IPsec, remote access VPN |
+| Services | RADIUS, NTP, centralized services |
+| Validation | Traffic logs, traceroute, ping, policy testing, SLA failover testing |
+| Lab Platforms | EVE-NG, virtual routers, virtual firewalls, virtual SD-WAN appliances |
+
+---
+
+# Why This Repository Matters
+
+This repository is meant to show how I approach network engineering projects from design to validation.
+
+My general workflow is:
+
+1. Define a realistic scenario.
+2. Build the lab topology.
+3. Configure the required network/security/automation components.
+4. Validate the expected behavior.
+5. Document the design, results, and lessons learned.
+
+The focus is not only on configuration, but also on proving that the configuration works.
+
+Examples include:
+
+- Showing traffic path behavior with traceroute
+- Validating SD-WAN transport failover after SLA violations
+- Proving internet breakout behavior per tenant
+- Confirming User-ID based access control with firewall logs
+- Using automation to generate backups, inventory reports, and configuration snippets
+
+---
+
+# Notes
+
+Some projects are more mature than others.
+
+Newer projects include better documentation, diagrams, screenshots, validation matrices, and evidence folders. Older projects may be improved over time as I rebuild or expand them.
+
+Where full configuration exports are not available, the documentation focuses on architecture, implementation approach, and available validation evidence.
+
+---
+
+# Current Focus
+
+My current focus areas are:
+
+- Network security engineering
+- Palo Alto NGFW design and operations
+- SD-WAN architecture
+- Network automation
+- Realistic lab documentation for portfolio projects
