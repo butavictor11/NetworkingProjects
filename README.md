@@ -134,45 +134,70 @@ The project focuses on building a more realistic enterprise security design wher
 
 **Project path:** `automation/`
 
-This area contains Ansible and Python/Netmiko projects focused on automating common network engineering tasks.
+This area contains Ansible and Python/Netmiko projects focused on automating common network engineering tasks such as configuration deployment, compliance auditing, inventory collection, configuration backups, and template-based routing configuration.
 
-The goal is to move beyond manual CLI work and build repeatable workflows for collecting information, backing up configurations, provisioning interfaces, and generating templated configurations.
+The projects are split into two main areas:
+
+1. Ansible automation
+2. Python / Netmiko automation
+
+---
 
 ### Ansible Projects
 
-The Ansible work includes introductory and practical playbooks for multi-device automation.
+The Ansible projects focus on building repeatable automation workflows using playbooks, roles/tasks, YAML variables, and Jinja2 templates.
 
-| Playbook | Purpose |
+| Project | Description |
 |---|---|
-| `version.yml` | Collects `show version` and `show inventory` from multiple devices |
-| `loopbacks.yml` | Creates loopback interfaces and assigns IP addresses using variable files |
-| `backup.yml` | Saves timestamped running configuration backups |
+| Basic Ansible Playbooks | Introductory playbooks for collecting device information, configuring loopbacks, and backing up configurations |
+| Campus LAN Automation | Builds a functional three-tier campus design using Ansible, separated task files, YAML variables, and Jinja2 templates |
+| Compliance Audit and Remediation | Audits RADIUS, NTP, and login banner configuration across multiple devices; if a device fails the audit, remediation is applied and the audit is run again |
 
-Additional work includes a campus LAN automation project using YAML variables and Jinja2 templates.
+Key Ansible work:
 
-### Python / Netmiko Scripts
+- `version.yml` collects `show version` and `show inventory` from multiple devices.
+- `loopbacks.yml` creates loopback interfaces and assigns IP addresses using variable files.
+- `backup.yml` saves timestamped running configuration backups.
+- Campus LAN automation separates playbook logic into reusable task files.
+- Jinja2 templates are used to generate a three-tier campus configuration.
+- Compliance automation validates RADIUS, NTP, and banner configuration.
+- Failed audit checks trigger remediation.
+- Aggregate and per-device reports are generated after every audit run.
 
-Python scripts were created for common operational workflows.
-
-| Script Type | Purpose |
-|---|---|
-| Configuration backup | Connects to devices and saves running configurations |
-| Loopback creation | Creates loopback interfaces using Netmiko |
-| Inventory collection | Pulls device information and stores it in CSV |
-| Jinja2 interaction | Renders configuration templates from structured data |
-
-### Skills Demonstrated
+Skills demonstrated:
 
 | Area | Skills |
 |---|---|
-| Ansible | Playbooks, inventory, variables, command execution, configuration tasks |
-| Python | Scripting, file handling, CSV output, workflow automation |
-| Netmiko | SSH to network devices, command collection, config deployment |
-| Jinja2 | Template-based configuration generation |
-| YAML | Structured variables |
-| Automation Design | Repeatable backups, inventory collection, templated deployment |
+| Ansible | Playbooks, task files, variables, inventory, command execution, configuration deployment |
+| Jinja2 | Template-based campus configuration generation |
+| YAML | Structured input data for repeatable automation |
+| Compliance | Audit, remediation, re-check workflow |
+| Reporting | Aggregate and per-device audit reports |
+| Campus Design | Three-tier campus LAN configuration |
 
 ---
+
+### Python / Netmiko Projects
+
+The Python and Netmiko projects focus on SSH-based network automation, data collection, configuration backup, and template-driven routing configuration.
+
+| Script / Project | Description |
+|---|---|
+| `Inventory/inventory.py` | Collects hostname, operating system, software version, and uptime information from multiple devices and exports the results to a CSV file |
+| `ConfigBackup/config_backup.py` | Collects running configurations from multiple devices and saves each configuration into a separate backup file |
+| `bgp_practice/bgp_practice.py` | Uses Jinja2 templates and Netmiko to configure BGP neighbor relationships and advertise networks between devices |
+| `BGP/bgp_config.py` | Uses YAML variables, Jinja2 templates, and Netmiko to build a more advanced BGP configuration workflow, including route reflectors and policy-based traffic steering |
+
+Skills demonstrated:
+
+| Area | Skills |
+|---|---|
+| Python | Scripting, file handling, CSV generation, automation logic |
+| Netmiko | SSH connectivity, command execution, configuration deployment |
+| Jinja2 | Template-driven configuration generation |
+| YAML | Structured variables for routing configuration |
+| BGP Automation | Neighbor creation, network advertisement, route reflector configuration, traffic engineering |
+| Operations | Inventory collection and configuration backup automation |
 
 ## Protocol Independent Multicast Labs
 
