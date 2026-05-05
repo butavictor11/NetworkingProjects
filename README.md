@@ -131,58 +131,100 @@ The project focuses on building a more realistic enterprise security design wher
 
 ---
 
-## Palo Alto Firewall Automation Project
+# Palo Alto Firewall Automation Project
 
 **Project path:** `firewall-automation/`
 
-This project focuses on automating standalone Palo Alto NGFW operations using Python and Ansible.
+This project focuses on automating standalone Palo Alto NGFW operations using **Python** and **Ansible**.
 
-The lab uses two standalone Palo Alto firewalls representing an HQ and Branch environment. The project started with a Python-based configuration backup script and was later extended into an Ansible-based policy-as-code workflow for address objects, security policies, and source NAT rules.
+The lab uses two standalone Palo Alto firewalls representing an **HQ and Branch** environment. The project started with a Python-based configuration backup script and was later extended into an Ansible-based **policy-as-code** workflow for address objects, security policies, source NAT rules, and site-to-site IPsec VPN automation.
 
-The goal of this project is to demonstrate a production-style firewall automation workflow where firewall policy is stored as structured YAML data and deployed consistently through a reusable Ansible role.
+The goal of this project is to demonstrate a production-style firewall automation workflow where firewall configuration intent is stored as structured YAML data and deployed consistently through a reusable Ansible role.
 
-### Scenario
+---
+
+## Scenario
 
 The lab simulates a small enterprise firewall environment with separate HQ and Branch Palo Alto NGFWs.
 
 Each firewall has its own policy file, while a single reusable Ansible role handles the deployment logic. The playbook dynamically loads the correct policy file based on the inventory hostname.
-
-Example:
 
 | Inventory Host | Policy File |
 |---|---|
 | `hq` | `vars/hq_policy.yml` |
 | `branch` | `vars/branch_policy.yml` |
 
-This allows the same playbook and role to deploy firewall policy to different standalone firewalls without duplicating playbook logic.
+This allows the same playbook and role to deploy firewall configuration to different standalone firewalls without duplicating playbook logic.
 
-### Key Features
+Current lab design:
+
+```text
+HQ users:         10.10.10.0/24
+Branch users:     10.20.20.0/24
+HQ untrust IP:    57.57.57.57
+Branch untrust:   58.58.58.58
+VPN tunnel:       tunnel.1
+Tunnel subnet:    172.16.1.0/30
+HQ tunnel IP:     172.16.1.1/30
+Branch tunnel IP: 172.16.1.2/30
+```
+
+---
+
+## Key Features
 
 - Standalone Palo Alto NGFW automation
 - Python-based running configuration backup
 - Ansible inventory for multiple firewalls
 - Per-firewall YAML policy files
 - Reusable Ansible role for policy deployment
+- Dynamic variable loading based on inventory hostname
 - Address object creation
 - Security policy creation
 - Source NAT rule creation
+- Tunnel interface creation
+- VPN zone assignment
+- IKE crypto profile creation
+- IPsec crypto profile creation
+- IKE gateway creation
+- IPsec tunnel creation
+- Static routes over the VPN tunnel
+- User-to-user VPN security policies
 - Conditional commit only when changes occur
+- Optional forced commit using an extra variable
 - Idempotent Ansible execution
-- Use of Ansible `--limit` to target specific firewalls
+- Use of `--limit` to target specific firewalls
 - Git-safe credential handling with ignored credential files
 - Example credential file for safe repository sharing
 - Basic validation tasks before deployment
 - Role-based Ansible structure using separate task files
+- Palo Alto CLI troubleshooting workflow for IKE/IPsec
 
-### Automation Workflow
+---
+
+## Automation Workflow
 
 The project follows this workflow:
 
 ```text
-Backup -> Load Variables -> Validate -> Deploy Objects -> Deploy Security Rules -> Deploy NAT -> Commit if Changed
+Backup
+  -> Load Variables
+  -> Validate YAML Policy Data
+  -> Deploy Address Objects
+  -> Deploy Tunnel Interface
+  -> Deploy IKE Crypto Profile
+  -> Deploy IPsec Crypto Profile
+  -> Deploy IKE Gateway
+  -> Deploy IPsec Tunnel
+  -> Deploy Static Routes
+  -> Deploy Security Rules
+  -> Deploy NAT Rules
+  -> Commit if Changed
 ```
 
-### Project Structure
+---
+
+## Project Structure
 
 ```text
 firewall-automation/
@@ -204,6 +246,12 @@ firewall-automation/
 │   │           ├── load_vars.yml
 │   │           ├── validate.yml
 │   │           ├── objects.yml
+│   │           ├── create_tunnel_interface.yml
+│   │           ├── ike_profile.yml
+│   │           ├── ipsec_profile.yml
+│   │           ├── ike_gateway.yml
+│   │           ├── ipsec_to_ike.yml
+│   │           ├── static_routes.yml
 │   │           ├── security.yml
 │   │           ├── nat.yml
 │   │           └── commit.yml
@@ -217,7 +265,9 @@ firewall-automation/
 └── README.md
 ```
 
-### Example Capabilities
+---
+
+## Example Capabilities
 
 | Capability | Description |
 |---|---|
@@ -225,38 +275,136 @@ firewall-automation/
 | Address Objects | Ansible creates reusable address objects from YAML |
 | Security Rules | Ansible deploys firewall security rules from per-firewall policy files |
 | Source NAT | Ansible creates outbound source NAT policies for HQ and Branch |
-| Conditional Commit | Firewall commit runs only if objects, rules, or NAT policies changed |
-| Idempotency | Re-running the playbook does not create duplicate objects or rules |
+| Tunnel Interface | Ansible creates `tunnel.1` and assigns it to the virtual router and VPN zone |
+| IKE Crypto Profile | Ansible deploys IKE crypto settings such as DH group, authentication, encryption, and lifetime |
+| IPsec Crypto Profile | Ansible deploys ESP authentication, encryption, PFS group, and lifetime settings |
+| IKE Gateway | Ansible creates the IKE gateway between HQ and Branch public IPs |
+| IPsec Tunnel | Ansible binds the IPsec tunnel to the tunnel interface, IKE gateway, and IPsec crypto profile |
+| Static Routes | Ansible installs routes to remote user subnets through `tunnel.1` |
+| VPN Policies | Ansible creates User-to-VPN and VPN-to-User rules for inter-site user traffic |
+| Conditional Commit | Firewall commit runs only if registered tasks report changes |
+| Force Commit | Optional `force_commit=true` allows manual commit when needed |
+| Idempotency | Re-running the playbook does not create duplicate objects, policies, or VPN components |
 | Targeting | `--limit hq` or `--limit branch` controls which firewall is changed |
 | Credential Safety | Real credentials are ignored by Git and replaced with a safe example file |
 
-### Skills Demonstrated
+---
+
+## IPsec VPN Automation
+
+The project includes automation for a route-based site-to-site IPsec VPN between HQ and Branch.
+
+The VPN deployment includes:
+
+```text
+Tunnel interface creation
+VPN zone attachment
+IKE crypto profile
+IPsec crypto profile
+IKE gateway
+IPsec tunnel object
+Static routes over tunnel.1
+Security policies for user-to-user VPN traffic
+```
+
+Logical VPN design:
+
+```text
+HQ firewall:
+  Untrust IP: 57.57.57.57
+  User subnet: 10.10.10.0/24
+  Tunnel IP: 172.16.1.1/30
+  Route to Branch users: 10.20.20.0/24 via tunnel.1
+
+Branch firewall:
+  Untrust IP: 58.58.58.58
+  User subnet: 10.20.20.0/24
+  Tunnel IP: 172.16.1.2/30
+  Route to HQ users: 10.10.10.0/24 via tunnel.1
+```
+
+VPN verification was performed using Palo Alto CLI commands:
+
+```bash
+show vpn ike-sa
+show vpn ipsec-sa
+test vpn ike-sa gateway Ike_gateway
+test routing fib-lookup virtual-router default ip 10.20.20.1
+test routing fib-lookup virtual-router default ip 10.10.10.1
+test security-policy-match source 10.10.10.1 destination 10.20.20.1 protocol 1 from User to VPN
+tail follow yes mp-log ikemgr.log
+```
+
+The VPN was successfully brought up, with logs confirming:
+
+```text
+IKEv2 IKE SA NEGOTIATION SUCCEEDED
+IKEv2 CHILD SA NEGOTIATION SUCCEEDED
+IPSEC KEY INSTALLATION SUCCEEDED
+```
+
+---
+
+## Example Ansible Usage
+
+Run the playbook against all firewalls:
+
+```bash
+ansible-playbook -i inventory.yml playbooks/deploy_policy.yml
+```
+
+Run only against HQ:
+
+```bash
+ansible-playbook -i inventory.yml playbooks/deploy_policy.yml --limit hq
+```
+
+Run only against Branch:
+
+```bash
+ansible-playbook -i inventory.yml playbooks/deploy_policy.yml --limit branch
+```
+
+Force a commit when required:
+
+```bash
+ansible-playbook -i inventory.yml playbooks/deploy_policy.yml -e force_commit=true
+```
+
+Syntax check:
+
+```bash
+ansible-playbook -i inventory.yml playbooks/deploy_policy.yml --syntax-check
+```
+
+---
+
+## Skills Demonstrated
 
 | Area | Skills |
 |---|---|
-| Palo Alto NGFW | Address objects, security rules, NAT, zones, commit workflow |
-| Ansible | Inventory, variables, roles, tasks, tags, conditionals, idempotency |
-| Python | Configuration backup automation, YAML inventory usage |
-| Automation Design | Policy-as-code, reusable role structure, per-device policy files |
-| Security Operations | Safe credential handling, controlled deployment, validation before change |
-| Git/GitHub | `.gitignore`, example secrets file, portfolio-ready repository structure |
+| Palo Alto NGFW | Address objects, zones, security rules, NAT, tunnel interfaces, IKE gateways, IPsec tunnels, static routes, commit workflow |
+| VPN | Route-based IPsec VPN, IKE crypto, IPsec crypto, tunnel interfaces, VPN routing, IKE/IPsec troubleshooting |
+| Ansible | Inventory, variables, roles, tasks, loops, registers, conditionals, tags, idempotency, `--limit`, forced commits |
+| Python | Configuration backup automation and YAML inventory usage |
+| Automation Design | Policy-as-code, reusable role structure, per-device policy files, structured configuration intent |
+| Security Operations | Safe credential handling, controlled deployment, validation before change, firewall troubleshooting |
+| Git/GitHub | `.gitignore`, example secrets file, repository structure, portfolio-ready documentation |
 
 ---
 
-# Network Automation Projects
+## Notes
 
-**Project path:** `network-automation/`
+This project is designed as a hands-on lab and portfolio project for learning firewall automation. The same role structure can be extended further to include:
 
-This area contains Ansible and Python/Netmiko projects focused on automating common network engineering tasks such as configuration deployment, compliance auditing, inventory collection, configuration backups, and template-based routing configuration.
-
-The network automation projects are split into two main areas:
-
-- Ansible automation
-- Python / Netmiko automation
-
-The Palo Alto firewall automation project is maintained separately under `firewall-automation/` because it combines firewall security operations, Python backups, and Ansible policy-as-code.
-
----
+- NAT exemption for VPN traffic
+- Dynamic address groups
+- Security profile groups
+- Decryption policies
+- Panorama support
+- Post-deployment validation scripts
+- CI/CD pipeline integration
+- Automated firewall compliance checks
 
 ## Ansible Projects
 
