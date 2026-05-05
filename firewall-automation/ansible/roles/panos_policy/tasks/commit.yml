@@ -6,8 +6,15 @@
       username: "{{ ansible_user }}"
       password: "{{ ansible_password }}"
   when: >
-    address_result.changed | default(false) or
-    security_result.changed | default(false) or
-    nat_result.changed | default(false)
+    (address_result is defined and address_result.changed) or
+    (security_result is defined and security_result.changed) or
+    (nat_result is defined and nat_result.changed) or
+    (tunnel_result is defined and tunnel_result.changed) or
+    (ike_profile_result is defined and ike_profile_result.changed) or
+    (ipsec_profile_result is defined and ipsec_profile_result.changed) or
+    (ike_gateway_result is defined and ike_gateway_result.changed)  or
+    (ipsec_to_ike_result is defined and ipsec_to_ike_result.changed)
+
+
   tags:
     - commit

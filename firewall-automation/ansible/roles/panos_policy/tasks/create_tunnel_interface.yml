@@ -1,0 +1,18 @@
+---
+- name: Create tunnel interface
+  paloaltonetworks.panos.panos_tunnel:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+    state: present
+    if_name: "{{ item.tunnel_interface }}"
+    vr_name: "{{ item.virtual_router }}"
+    zone_name: "{{ item.vpn_zone }}"
+    ip:
+      - "{{ item.tunnel_ip }}"
+    comment: "{{ item.description }}"
+    commit: false
+  loop: "{{ tunnel }}"
+  register: tunnel_result
+  changed_when: false

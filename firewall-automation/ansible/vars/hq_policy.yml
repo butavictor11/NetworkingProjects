@@ -45,7 +45,22 @@ security_rules:
     action: allow
     log_end: true
     description: Allow HQ users to DMZ server
-
+  - name: ALLOW-HQ-USERS-TO-VPN
+    source_zone:
+      - User
+    destination_zone:
+      - VPN
+    source_ip:
+      - HQ_USERS_SUBNET
+    destination_ip:
+      - any
+    application:
+      - any
+    service:
+      - application-default
+    action: allow
+    log_end: true
+    description: allow User zone to VPN
 nat_rules:
   - name: SNAT-HQ-USERS-OUTBOUND
     from_zones:
@@ -61,3 +76,37 @@ nat_rules:
     source_translation_address_type: interface-address
     source_translation_interface: ethernet1/1
     description: Source NAT HQ users to Untrust
+
+tunnel:
+  - name : tunnel_for_ipsec
+    tunnel_interface: tunnel.1
+    virtual_router: default
+    tunnel_ip: 172.16.1.1/30
+    vpn_zone: VPN
+    description: "ipsec tunnel"
+
+ike_profile:
+  - name: Ike_profile
+    dh_group:  group5
+    auth_algorithm:  md5 
+    encryption:   aes-256-cbc
+
+ipsec_profile:
+  - name : Ipsec_profile
+    ipsec_auth: sha256
+    encryption: aes-256-cbc
+    group: group14
+
+ike_gateway:
+  - gateway_name: Ike_gateway
+    gateway_version: ikev2
+    gateway_interface: ethernet1/1
+    ike_peer_ip: 58.58.58.58
+    ike_key: Muiefane123
+    ike_profile: Ike_profile
+
+ipsec_to_ike:
+  - tunnel_name: IPSEC_to_HQ
+    tunnel_interface: tunnel.1
+    ike_gateway: Ike_gateway
+    ipsec_profile: Ipsec_profile

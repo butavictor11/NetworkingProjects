@@ -1,0 +1,14 @@
+- name: Add IKE crypto config to the firewall
+  paloaltonetworks.panos.panos_ike_crypto_profile:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+    state: 'present'
+    name: "{{ item.name }}"
+    dh_group: "{{ item.dh_group }}"
+    authentication: "{{ item.auth_algorithm }}"
+    encryption: "{{ item.encryption }}"
+    lifetime_seconds: '28800'
+  loop: "{{ ike_profile }}"
+  register: ike_profile_result

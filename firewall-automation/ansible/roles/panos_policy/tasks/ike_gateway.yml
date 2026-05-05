@@ -1,0 +1,17 @@
+- name: Add IKE gateway config to the firewall
+  paloaltonetworks.panos.panos_ike_gateway:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+    state: 'present'
+    name: "{{ item.gateway_name }}"
+    version: "{{item.gateway_version }}"
+    interface: "{{ item.gateway_interface }}"
+    peer_ip_value: "{{ item.ike_peer_ip }}"
+    pre_shared_key: "{{ item.ike_key }}"
+    passive_mode: false
+    ikev2_crypto_profile: "{{ item.ike_profile }}"
+    commit: false
+  loop: "{{ ike_gateway }}"
+  register: ike_gateway_result

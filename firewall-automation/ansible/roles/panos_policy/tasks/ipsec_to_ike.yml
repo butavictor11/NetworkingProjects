@@ -1,0 +1,12 @@
+- name: Add IPSec tunnel to IKE gateway profile
+  paloaltonetworks.panos.panos_ipsec_tunnel:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+    name: "{{item.tunnel_name }}"
+    tunnel_interface: "{{item.tunnel_interface}}"
+    ak_ike_gateway: "{{ item.ike_gateway }}"
+    ak_ipsec_crypto_profile: "{{ item.ipsec_profile }}"
+  loop: "{{ ipsec_to_ike }}"
+  register: ipsec_to_ike_result

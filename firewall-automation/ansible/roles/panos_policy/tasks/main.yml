@@ -8,6 +8,23 @@
 - name: Configure address objects
   ansible.builtin.import_tasks: objects.yml
 
+- name: Create tunnel and attach it to zone 
+  ansible.builtin.import_tasks: create_tunnel_interface.yml
+
+- name: Configure Ike profile
+  ansible.builtin.import_tasks: ike_profile.yml
+
+
+- name: Configure Ipsec profile
+  ansible.builtin.import_tasks: ipsec_profile.yml
+
+- name: Configure Ike gateway
+  ansible.builtin.import_tasks: ike_gateway.yml
+
+- name: Configure IPSEC_to_ike
+  ansible.builtin.import_tasks: ipsec_to_ike.yml
+
+
 - name: Configure security rules
   ansible.builtin.import_tasks: security.yml
 
@@ -16,3 +33,5 @@
 
 - name: Commit firewall changes if needed
   ansible.builtin.import_tasks: commit.yml
+
+
