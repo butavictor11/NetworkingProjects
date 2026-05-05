@@ -1,0 +1,11 @@
+all:
+  children:
+    firewalls:
+      hosts:
+        hq:
+          hostname: HQ_firewall
+          ansible_host: 192.168.116.130
+
+        branch:
+          hostname: Branch_FW
+          ansible_host: 192.168.116.147

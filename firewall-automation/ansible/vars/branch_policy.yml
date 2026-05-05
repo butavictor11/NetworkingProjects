@@ -1,0 +1,63 @@
+---
+address_objects:
+  - name: BRANCH_USERS_SUBNET
+    value: 10.20.20.0/24
+    description: Branch  internal users subnet
+
+  - name: BRANCH_DMZ_SUBNET
+    value: 200.200.200.0/24
+    description: Branch DMZ Subnet
+
+security_rules:
+  - name: ALLOW-BRANCH-USERS-OUTBOUND
+    source_zone:
+      - User
+    destination_zone:
+      - Untrust
+    source_ip:
+      - BRANCH_USERS_SUBNET
+    destination_ip:
+      - any
+    application:
+      - any
+    service:
+      - application-default
+    action: allow
+    log_end: true
+    description: allow User zone to Untrust
+  
+  - name: ALLOW-BRANCH-USERS-TO-DMZ
+    source_zone:
+      - User
+    destination_zone:
+      - DMZ
+    source_ip:
+      - BRANCH_USERS_SUBNET
+    destination_ip:
+      - BRANCH_DMZ_SUBNET
+    application:
+      - ping
+      - ssh
+      - web-browsing
+      - ssl
+    service:
+      - application-default
+    action: allow
+    log_end: true
+    description: Allow Branch users to DMZ server
+
+nat_rules:
+  - name: SNAT-BRANCH-USERS-OUTBOUND
+    from_zones:
+      - User
+    to_zones:
+      - Untrust
+    source_addresses:
+      - BRANCH_USERS_SUBNET
+    destination_addresses:
+      - any
+    service: any
+    source_translation_type: dynamic-ip-and-port
+    source_translation_address_type: interface-address
+    source_translation_interface: ethernet1/1
+    description: Source NAT Branch users to untrustt

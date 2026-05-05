@@ -1,0 +1,12 @@
+firewalls:
+  hq:
+    hostname: HQ_firewall
+    mgmt_ip: 192.168.116.130
+    username: admin
+    password: Muiefane123
+
+  branch:
+    hostname: Branch_FW
+    mgmt_ip: 192.168.116.147
+    username: admin
+    password: Muiefane123

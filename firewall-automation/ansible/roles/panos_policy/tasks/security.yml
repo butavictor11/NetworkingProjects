@@ -1,0 +1,21 @@
+---
+- name: Create security rules
+  paloaltonetworks.panos.panos_security_rule:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+    rule_name: "{{ item.name }}"
+    source_zone: "{{ item.source_zone }}"
+    destination_zone: "{{ item.destination_zone }}"
+    source_ip: "{{ item.source_ip }}"
+    destination_ip: "{{ item.destination_ip }}"
+    application: "{{ item.application }}"
+    service: "{{ item.service }}"
+    action: "{{ item.action }}"
+    log_end: "{{ item.log_end }}"
+    description: "{{ item.description | default(omit) }}"
+  loop: "{{ security_rules | default([]) }}"
+  register: security_result
+  tags:
+    - security

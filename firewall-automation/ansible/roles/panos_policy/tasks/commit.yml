@@ -1,0 +1,13 @@
+---
+- name: Commit firewall changes only if needed
+  paloaltonetworks.panos.panos_commit_firewall:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+  when: >
+    address_result.changed | default(false) or
+    security_result.changed | default(false) or
+    nat_result.changed | default(false)
+  tags:
+    - commit

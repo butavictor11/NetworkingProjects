@@ -1,0 +1,21 @@
+---
+- name: Create NAT rules
+  paloaltonetworks.panos.panos_nat_rule:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+    name: "{{ item.name }}"
+    from_zones: "{{ item.from_zones }}"
+    to_zones: "{{ item.to_zones }}"
+    source_addresses: "{{ item.source_addresses }}"
+    destination_addresses: "{{ item.destination_addresses }}"
+    service: "{{ item.service }}"
+    source_translation_type: "{{ item.source_translation_type }}"
+    source_translation_address_type: "{{ item.source_translation_address_type }}"
+    source_translation_interface: "{{ item.source_translation_interface }}"
+    description: "{{ item.description | default(omit) }}"
+  loop: "{{ nat_rules | default([]) }}"
+  register: nat_result
+  tags:
+    - nat

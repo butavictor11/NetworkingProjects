@@ -1,0 +1,4 @@
+---
+- name: Load firewall-specific policy variables
+  ansible.builtin.include_vars:
+    file: "{{ playbook_dir }}/../vars/{{ inventory_hostname }}_policy.yml"

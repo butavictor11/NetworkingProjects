@@ -1,0 +1,14 @@
+---
+- name: Create address objects
+  paloaltonetworks.panos.panos_address_object:
+    provider:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    description: "{{ item.description | default(omit) }}"
+  loop: "{{ address_objects | default([]) }}"
+  register: address_result
+  tags:
+    - objects

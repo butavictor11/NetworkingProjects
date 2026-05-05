@@ -1,0 +1,30 @@
+---
+- name: Validate security_rules is defined
+  ansible.builtin.assert:
+    that:
+      - security_rules is defined
+    fail_msg: "security_rules is not defined for {{ inventory_hostname }}"
+
+- name: Validate allow security rules have log_end enabled
+  ansible.builtin.assert:
+    that:
+      - item.log_end | bool
+    fail_msg: "Security rule {{ item.name }} must have log_end enabled"
+  loop: "{{ security_rules }}"
+  when: item.action == "allow"
+
+- name: Validate security rules have descriptions
+  ansible.builtin.assert:
+    that:
+      - item.description is defined
+      - item.description | length > 0
+    fail_msg: "Security rule {{ item.name }} is missing a description"
+  loop: "{{ security_rules }}"
+
+- name: Validate NAT rules have names
+  ansible.builtin.assert:
+    that:
+      - item.name is defined
+      - item.name | length > 0
+    fail_msg: "A NAT rule is missing a name"
+  loop: "{{ nat_rules | default([]) }}"

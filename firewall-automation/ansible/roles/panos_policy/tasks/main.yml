@@ -1,0 +1,18 @@
+---
+- name: Load firewall-specific variables
+  ansible.builtin.import_tasks: load_vars.yml
+
+- name: Validate firewall policy variables
+  ansible.builtin.import_tasks: validate.yml
+
+- name: Configure address objects
+  ansible.builtin.import_tasks: objects.yml
+
+- name: Configure security rules
+  ansible.builtin.import_tasks: security.yml
+
+- name: Configure NAT rules
+  ansible.builtin.import_tasks: nat.yml
+
+- name: Commit firewall changes if needed
+  ansible.builtin.import_tasks: commit.yml

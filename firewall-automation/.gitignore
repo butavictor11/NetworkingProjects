@@ -1,0 +1,10 @@
+# Secrets / credentials
+ansible/group_vars/firewalls.yml
+*.vault.yml
+*.key
+.env
+
+# Python / Ansible noise
+__pycache__/
+*.pyc
+.retry

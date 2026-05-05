@@ -1,0 +1,8 @@
+---
+- name: Deploy Palo Alto firewall policy
+  hosts: firewalls
+  connection: local
+  gather_facts: false
+
+  roles:
+    - panos_policy

@@ -1,0 +1,63 @@
+---
+address_objects:
+  - name: HQ_USERS_SUBNET
+    value: 10.10.10.0/24
+    description: HQ internal users subnet
+
+  - name: HQ_DMZ_SUBNET
+    value: 100.100.100.0/24
+    description: HQ DMZ Subnet
+
+security_rules:
+  - name: ALLOW-HQ-USERS-OUTBOUND
+    source_zone:
+      - User
+    destination_zone:
+      - Untrust
+    source_ip:
+      - HQ_USERS_SUBNET
+    destination_ip:
+      - any
+    application:
+      - any
+    service:
+      - application-default
+    action: allow
+    log_end: true
+    description: allow User zone to Untrust
+  
+  - name: ALLOW-HQ-USERS-TO-DMZ
+    source_zone:
+      - User
+    destination_zone:
+      - DMZ
+    source_ip:
+      - HQ_USERS_SUBNET
+    destination_ip:
+      - HQ_DMZ_SUBNET
+    application:
+      - ping
+      - ssh
+      - web-browsing
+      - ssl
+    service:
+      - application-default
+    action: allow
+    log_end: true
+    description: Allow HQ users to DMZ server
+
+nat_rules:
+  - name: SNAT-HQ-USERS-OUTBOUND
+    from_zones:
+      - User
+    to_zones:
+      - Untrust
+    source_addresses:
+      - HQ_USERS_SUBNET
+    destination_addresses:
+      - any
+    service: any
+    source_translation_type: dynamic-ip-and-port
+    source_translation_address_type: interface-address
+    source_translation_interface: ethernet1/1
+    description: Source NAT HQ users to Untrust
