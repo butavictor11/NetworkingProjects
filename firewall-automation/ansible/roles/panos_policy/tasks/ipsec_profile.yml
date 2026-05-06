@@ -1,3 +1,4 @@
+---
 - name: Add IPSec crypto config to the firewall
   paloaltonetworks.panos.panos_ipsec_profile:
     provider:
@@ -5,10 +6,10 @@
       username: "{{ ansible_user }}"
       password: "{{ ansible_password }}"
     state: 'present'
-    name: "{{item.name}}"
-    esp_authentication: "{{ item.ipsec_auth}}"
+    name: "{{ item.name }}"
+    esp_authentication: "{{ item.ipsec_auth }}"
     esp_encryption: "{{ item.encryption }}"
     lifetime_seconds: '3600'
-    dh_group: "{{item.group}}"
+    dh_group: "{{ item.group }}"
   loop: "{{ ipsec_profile }}"
   register: ipsec_profile_result

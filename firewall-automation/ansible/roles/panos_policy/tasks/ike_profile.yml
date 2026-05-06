@@ -1,3 +1,4 @@
+---
 - name: Add IKE crypto config to the firewall
   paloaltonetworks.panos.panos_ike_crypto_profile:
     provider:
