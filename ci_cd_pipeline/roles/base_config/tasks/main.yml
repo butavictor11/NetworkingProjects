@@ -1,0 +1,5 @@
+---
+- name: Render base configuration
+  ansible.builtin.template:
+    src: base.j2
+    dest: "{{ generated_config_dir }}/{{ inventory_hostname }}_base.cfg"

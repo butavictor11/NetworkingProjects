@@ -1,0 +1,6 @@
+---
+- name: Render OSPF configuration
+  ansible.builtin.template:
+    src: ospf.j2
+    dest: "{{ generated_config_dir }}/{{ inventory_hostname }}_ospf.cfg"
+  when: ospf is defined

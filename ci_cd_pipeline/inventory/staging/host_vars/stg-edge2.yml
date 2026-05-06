@@ -1,0 +1,66 @@
+hostname: test_edge2
+role: edge
+site: staging
+
+asn: 65100
+router_id: 4.4.4.4
+
+
+interfaces:
+  - name: GigabitEthernet0/0
+    description: To test_core Gi0/1
+    ip: 10.3.2.2
+    mask: 255.255.255.252
+    enabled: true
+
+  - name: GigabitEthernet0/1
+    description: To test_edge1 Gi0/2
+    ip: 10.1.2.2
+    mask: 255.255.255.252
+    enabled: true
+
+  - name: GigabitEthernet0/2
+    description: To test_isp2 Gi0/0
+    ip: 58.58.58.2
+    mask: 255.255.255.252
+    enabled: true
+  - name: Loopback0
+    ip: 4.4.4.4
+    mask: 255.255.255.255
+    description: Edge2 Router ID
+
+bgp:
+  local_as: 65100
+  router_id: 4.4.4.4
+  neighbors:
+    - ip: 58.58.58.1
+      remote_as: 65002
+      description: eBGP to test_isp2
+
+    - ip: 2.2.2.2
+      remote_as: 65100
+      update_source: Loopback0
+      description: iBGP to test_edge1
+
+    - ip: 3.3.3.3
+      remote_as: 65100
+      update_source: Loopback0
+      description: iBGP to test_core
+
+  networks:
+    - prefix: 4.4.4.4
+      mask: 255.255.255.255
+
+ospf:
+  process_id: 1
+  router_id: 4.4.4.4
+  networks:
+    - prefix: 4.4.4.4
+      wildcard: 0.0.0.0
+      area: 0
+    - prefix: 10.1.2.0
+      wildcard: 0.0.0.3
+      area: 0
+    - prefix: 10.3.2.0
+      wildcard: 0.0.0.3
+      area: 0

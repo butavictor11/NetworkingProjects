@@ -1,0 +1,35 @@
+---
+hostname: Stage-ISP1
+role: provider
+site: staging
+
+bgp:
+  local_as: 65001
+  router_id: 1.1.1.1
+  neighbors:
+    - ip: 57.57.57.2
+      remote_as: 65100
+      description: eBGP to stg-edge1
+  networks:
+    - prefix: 1.1.1.1
+      mask: 255.255.255.255
+    - prefix: 11.11.11.11
+      mask: 255.255.255.255
+
+loopbacks:
+  - name: Loopback0
+    ip: 1.1.1.1
+    mask: 255.255.255.255
+    description: ISP1 Router ID
+
+  - name: Loopback1
+    ip: 11.11.11.11
+    mask: 255.255.255.255
+    description: ISP1 Test Prefix
+
+interfaces:
+  - name: GigabitEthernet0/0
+    description: To stg-edge1 Gi0/0
+    ip: 57.57.57.1
+    mask: 255.255.255.252
+    enabled: true

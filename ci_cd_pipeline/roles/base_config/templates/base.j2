@@ -1,0 +1,10 @@
+
+no ip domain-lookup
+
+{% for intf in interfaces %}
+interface {{ intf.name }}
+ description {{ intf.description }}
+ ip address {{ intf.ip }} {{ intf.mask }}
+ no shutdown
+!
+{% endfor %}

@@ -1,0 +1,12 @@
+---
+- name: Generate staging configurations
+  hosts: staging
+  gather_facts: false
+
+  vars:
+    generated_config_dir: "{{ playbook_dir }}/../generated_configs/staging"
+
+  roles:
+    - base_config
+    - underlay_ospf
+    - bgp_policy

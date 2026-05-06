@@ -1,0 +1,57 @@
+hostname: test_core
+role: core
+site: staging
+
+asn: 65100
+router_id: 3.3.3.3
+
+
+interfaces:
+  - name: GigabitEthernet0/0
+    description: To test_edge1 Gi0/1
+    ip: 10.2.2.2
+    mask: 255.255.255.252
+    enabled: true
+
+  - name: GigabitEthernet0/1
+    description: To test_edge2 Gi0/0
+    ip: 10.3.2.1
+    mask: 255.255.255.252
+    enabled: true
+  - name: Loopback0
+    ip: 3.3.3.3
+    mask: 255.255.255.255
+    description: Core Router ID
+ 
+
+bgp:
+  local_as: 65100
+  router_id: 3.3.3.3
+  neighbors:
+    - ip: 2.2.2.2
+      remote_as: 65100
+      update_source: Loopback0
+      description: iBGP to test_edge1
+
+    - ip: 4.4.4.4
+      remote_as: 65100
+      update_source: Loopback0
+      description: iBGP to test_edge2
+
+  networks:
+    - prefix: 5.5.5.5
+      mask: 255.255.255.255
+
+ospf:
+  process_id: 1
+  router_id: 5.5.5.5
+  networks:
+    - prefix: 5.5.5.5
+      wildcard: 0.0.0.0
+      area: 0
+    - prefix: 10.2.2.0
+      wildcard: 0.0.0.3
+      area: 0
+    - prefix: 10.3.2.0
+      wildcard: 0.0.0.3
+      area: 0

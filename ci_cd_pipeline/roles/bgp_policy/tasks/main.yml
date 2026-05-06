@@ -1,0 +1,6 @@
+---
+- name: Render BGP configuration
+  ansible.builtin.template:
+    src: bgp.j2
+    dest: "{{ generated_config_dir }}/{{ inventory_hostname }}_bgp.cfg"
+  when: bgp is defined

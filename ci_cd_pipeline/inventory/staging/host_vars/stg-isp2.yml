@@ -1,0 +1,37 @@
+hostname: test_isp2
+role: isp
+site: staging
+
+asn: 65002
+router_id: 22.22.22.22
+
+
+interfaces:
+  - name: GigabitEthernet0/0
+    description: To test_edge2 Gi0/2
+    ip: 58.58.58.1
+    mask: 255.255.255.252
+    enabled: true
+  - name: Loopback0
+    ip: 22.22.22.22
+    mask: 255.255.255.255
+    description: ISP2 Router ID
+
+  - name: Loopback1
+    ip: 33.33.33.33
+    mask: 255.255.255.255
+    description: ISP2 Test Prefix
+
+bgp:
+  local_as: 65002
+  router_id: 22.22.22.22
+  neighbors:
+    - ip: 58.58.58.2
+      remote_as: 65100
+      description: eBGP to test_edge2
+
+  networks:
+    - prefix: 22.22.22.22
+      mask: 255.255.255.255
+    - prefix: 33.33.33.33
+      mask: 255.255.255.255

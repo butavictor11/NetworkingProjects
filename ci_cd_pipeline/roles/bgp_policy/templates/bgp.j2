@@ -1,0 +1,17 @@
+router bgp {{ bgp.local_as }}
+ bgp log-neighbor-changes
+ bgp router-id {{ bgp.router_id }}
+{% for neighbor in bgp.neighbors %}
+ neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
+{% if neighbor.description is defined %}
+ neighbor {{ neighbor.ip }} description {{ neighbor.description }}
+{% endif %}
+{% if neighbor.update_source is defined %}
+ neighbor {{ neighbor.ip }} update-source {{ neighbor.update_source }}
+{% endif %}
+{% endfor %}
+{% if bgp.networks is defined %}
+{% for network in bgp.networks %}
+ network {{ network.prefix }} mask {{ network.mask }}
+{% endfor %}
+{% endif %}
