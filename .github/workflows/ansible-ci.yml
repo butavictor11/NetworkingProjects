@@ -14,7 +14,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ansible
+        working-directory: firewall-automation/ansible
 
     steps:
       - name: Checkout repository
