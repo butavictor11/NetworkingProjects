@@ -5,17 +5,19 @@ on:
   push:
     branches:
       - main
-      - dev
+      - develop
   pull_request:
-    branches:
-      - main
 
 jobs:
-  validate-configs:
+  validate:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ci_cd_pipeline
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -23,32 +25,39 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Ansible
+      - name: Install Ansible and linting tools
         run: |
           python -m pip install --upgrade pip
-          pip install ansible ansible-lint yamllint
+          pip install ansible ansible-lint yamllint netaddr
 
       - name: Install Ansible collections
         run: |
           ansible-galaxy collection install cisco.ios ansible.netcommon
 
+      - name: Show Ansible version
+        run: |
+          ansible --version
+
       - name: Validate staging inventory
         run: |
-          ansible-inventory -i inventory/staging/hosts.yml --graph
           ansible-inventory -i inventory/staging/hosts.yml --list
+          ansible-inventory -i inventory/staging/hosts.yml --graph
 
-      - name: Lint YAML files
+      - name: Run YAML lint
         run: |
           yamllint inventory playbooks roles
+
+      - name: Run Ansible syntax check - generate staging
+        run: |
+          ansible-playbook -i inventory/staging/hosts.yml playbooks/generate_staging.yml --syntax-check
 
       - name: Generate staging configs
         run: |
           mkdir -p generated_configs/staging
           ansible-playbook -i inventory/staging/hosts.yml playbooks/generate_staging.yml
 
-      - name: Check generated configs exist
+      - name: Verify generated configs exist
         run: |
-          ls -l generated_configs/staging
           test -f generated_configs/staging/stg-isp1_base.cfg
           test -f generated_configs/staging/stg-isp1_bgp.cfg
           test -f generated_configs/staging/stg-edge1_base.cfg
@@ -63,8 +72,12 @@ jobs:
           test -f generated_configs/staging/stg-isp2_base.cfg
           test -f generated_configs/staging/stg-isp2_bgp.cfg
 
+      - name: Check old IPs are not generated
+        run: |
+          ! grep -R "10.2.11\|10.2.12\|10.2.13" generated_configs/staging
+
       - name: Upload generated configs
         uses: actions/upload-artifact@v4
         with:
           name: staging-generated-configs
-          path: generated_configs/staging/
+          path: ci_cd_pipeline/generated_configs/staging/
