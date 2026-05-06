@@ -1,4 +1,5 @@
-hostname: test_edge2
+---
+ostname: test_edge2
 role: edge
 site: staging
 

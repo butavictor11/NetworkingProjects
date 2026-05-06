@@ -1,12 +1,10 @@
+---
 hostname: test_edge1
 role: edge
 site: staging
 
 asn: 65100
 router_id: 2.2.2.2
-
-
-
 interfaces:
   - name: GigabitEthernet0/0
     description: To test_isp1 Gi0/0
