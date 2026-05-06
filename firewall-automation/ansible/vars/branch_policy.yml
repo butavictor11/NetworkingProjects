@@ -110,3 +110,5 @@ ipsec_to_ike:
     tunnel_interface: tunnel.1
     ike_gateway: Ike_gateway
     ipsec_profile: Ipsec_profile
+
+# CI failure test   
