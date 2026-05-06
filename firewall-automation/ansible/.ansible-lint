@@ -1,0 +1,9 @@
+---
+profile: basic
+
+exclude_paths:
+  - .cache/
+  - collections/
+
+skip_list:
+  - yaml[line-length]

@@ -1,0 +1,55 @@
+---
+name: Ansible Firewall Automation CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ansible
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Ansible and linting tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible ansible-lint yamllint netaddr
+
+      - name: Install Ansible collections
+        run: |
+          ansible-galaxy collection install -r requirements.yml
+
+      - name: Show Ansible version
+        run: |
+          ansible --version
+
+      - name: Validate inventory
+        run: |
+          ansible-inventory -i inventory.yml --list
+
+      - name: Run YAML lint
+        run: |
+          yamllint .
+
+      - name: Run Ansible lint
+        run: |
+          ansible-lint playbooks/deploy_policy.yml
+
+      - name: Run Ansible syntax check
+        run: |
+          ansible-playbook -i inventory.yml playbooks/deploy_policy.yml --syntax-check

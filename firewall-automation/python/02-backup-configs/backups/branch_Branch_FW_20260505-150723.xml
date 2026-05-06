@@ -1,0 +1,624 @@
+<response status="success"><result><config version="10.1.0" urldb="paloaltonetworks" detail-version="10.1.0">
+  <mgt-config>
+    <users>
+      <entry name="admin">
+        <phash>$5$aovnxngr$SmmcMLKMzDPQ3vBLSRGqM76pLFonMrF7X2cqxUT7915</phash>
+        <permissions>
+          <role-based>
+            <superuser>yes</superuser>
+          </role-based>
+        </permissions>
+      </entry>
+    </users>
+    <password-complexity>
+      <enabled>yes</enabled>
+      <minimum-length>8</minimum-length>
+    </password-complexity>
+  </mgt-config>
+  <shared>
+    <application />
+    <application-group />
+    <service />
+    <service-group />
+    <botnet>
+      <configuration>
+        <http>
+          <dynamic-dns>
+            <enabled>yes</enabled>
+            <threshold>5</threshold>
+          </dynamic-dns>
+          <malware-sites>
+            <enabled>yes</enabled>
+            <threshold>5</threshold>
+          </malware-sites>
+          <recent-domains>
+            <enabled>yes</enabled>
+            <threshold>5</threshold>
+          </recent-domains>
+          <ip-domains>
+            <enabled>yes</enabled>
+            <threshold>10</threshold>
+          </ip-domains>
+          <executables-from-unknown-sites>
+            <enabled>yes</enabled>
+            <threshold>5</threshold>
+          </executables-from-unknown-sites>
+        </http>
+        <other-applications>
+          <irc>yes</irc>
+        </other-applications>
+        <unknown-applications>
+          <unknown-tcp>
+            <destinations-per-hour>10</destinations-per-hour>
+            <sessions-per-hour>10</sessions-per-hour>
+            <session-length>
+              <maximum-bytes>100</maximum-bytes>
+              <minimum-bytes>50</minimum-bytes>
+            </session-length>
+          </unknown-tcp>
+          <unknown-udp>
+            <destinations-per-hour>10</destinations-per-hour>
+            <sessions-per-hour>10</sessions-per-hour>
+            <session-length>
+              <maximum-bytes>100</maximum-bytes>
+              <minimum-bytes>50</minimum-bytes>
+            </session-length>
+          </unknown-udp>
+        </unknown-applications>
+      </configuration>
+      <report>
+        <topn>100</topn>
+        <scheduled>yes</scheduled>
+      </report>
+    </botnet>
+  </shared>
+  <devices>
+    <entry name="localhost.localdomain">
+      <network>
+        <interface>
+          <ethernet>
+            <entry name="ethernet1/1">
+              <layer3>
+                <ndp-proxy>
+                  <enabled>no</enabled>
+                </ndp-proxy>
+                <sdwan-link-settings>
+                  <upstream-nat>
+                    <enable>no</enable>
+                    <static-ip />
+                  </upstream-nat>
+                  <enable>no</enable>
+                </sdwan-link-settings>
+                <ip>
+                  <entry name="58.58.58.58/24" />
+                </ip>
+                <interface-management-profile>ping</interface-management-profile>
+                <lldp>
+                  <enable>no</enable>
+                </lldp>
+              </layer3>
+            </entry>
+            <entry name="ethernet1/3">
+              <layer3>
+                <ndp-proxy>
+                  <enabled>no</enabled>
+                </ndp-proxy>
+                <sdwan-link-settings>
+                  <upstream-nat>
+                    <enable>no</enable>
+                    <static-ip />
+                  </upstream-nat>
+                  <enable>no</enable>
+                </sdwan-link-settings>
+                <ip>
+                  <entry name="200.200.200.1/24" />
+                </ip>
+                <interface-management-profile>ping</interface-management-profile>
+                <lldp>
+                  <enable>no</enable>
+                </lldp>
+              </layer3>
+            </entry>
+            <entry name="ethernet1/2">
+              <layer3>
+                <ndp-proxy>
+                  <enabled>no</enabled>
+                </ndp-proxy>
+                <sdwan-link-settings>
+                  <upstream-nat>
+                    <enable>no</enable>
+                    <static-ip />
+                  </upstream-nat>
+                  <enable>no</enable>
+                </sdwan-link-settings>
+                <lldp>
+                  <enable>no</enable>
+                </lldp>
+                <units>
+                  <entry name="ethernet1/2.20">
+                    <ipv6>
+                      <neighbor-discovery>
+                        <router-advertisement>
+                          <enable>no</enable>
+                        </router-advertisement>
+                      </neighbor-discovery>
+                    </ipv6>
+                    <ndp-proxy>
+                      <enabled>no</enabled>
+                    </ndp-proxy>
+                    <sdwan-link-settings>
+                      <enable>no</enable>
+                    </sdwan-link-settings>
+                    <adjust-tcp-mss>
+                      <enable>no</enable>
+                    </adjust-tcp-mss>
+                    <ip>
+                      <entry name="10.20.20.1/24" />
+                    </ip>
+                    <interface-management-profile>ping</interface-management-profile>
+                    <tag>20</tag>
+                  </entry>
+                </units>
+              </layer3>
+            </entry>
+          </ethernet>
+        </interface>
+        <profiles>
+          <monitor-profile>
+            <entry name="default">
+              <interval>3</interval>
+              <threshold>5</threshold>
+              <action>wait-recover</action>
+            </entry>
+          </monitor-profile>
+          <interface-management-profile>
+            <entry name="ping">
+              <ping>yes</ping>
+            </entry>
+          </interface-management-profile>
+        </profiles>
+        <ike>
+          <crypto-profiles>
+            <ike-crypto-profiles>
+              <entry name="default">
+                <encryption>
+                  <member>aes-128-cbc</member>
+                  <member>3des</member>
+                </encryption>
+                <hash>
+                  <member>sha1</member>
+                </hash>
+                <dh-group>
+                  <member>group2</member>
+                </dh-group>
+                <lifetime>
+                  <hours>8</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-128">
+                <encryption>
+                  <member>aes-128-cbc</member>
+                </encryption>
+                <hash>
+                  <member>sha256</member>
+                </hash>
+                <dh-group>
+                  <member>group19</member>
+                </dh-group>
+                <lifetime>
+                  <hours>8</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-256">
+                <encryption>
+                  <member>aes-256-cbc</member>
+                </encryption>
+                <hash>
+                  <member>sha384</member>
+                </hash>
+                <dh-group>
+                  <member>group20</member>
+                </dh-group>
+                <lifetime>
+                  <hours>8</hours>
+                </lifetime>
+              </entry>
+            </ike-crypto-profiles>
+            <ipsec-crypto-profiles>
+              <entry name="default">
+                <esp>
+                  <encryption>
+                    <member>aes-128-cbc</member>
+                    <member>3des</member>
+                  </encryption>
+                  <authentication>
+                    <member>sha1</member>
+                  </authentication>
+                </esp>
+                <dh-group>group2</dh-group>
+                <lifetime>
+                  <hours>1</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-128">
+                <esp>
+                  <encryption>
+                    <member>aes-128-gcm</member>
+                  </encryption>
+                  <authentication>
+                    <member>none</member>
+                  </authentication>
+                </esp>
+                <dh-group>group19</dh-group>
+                <lifetime>
+                  <hours>1</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-256">
+                <esp>
+                  <encryption>
+                    <member>aes-256-gcm</member>
+                  </encryption>
+                  <authentication>
+                    <member>none</member>
+                  </authentication>
+                </esp>
+                <dh-group>group20</dh-group>
+                <lifetime>
+                  <hours>1</hours>
+                </lifetime>
+              </entry>
+            </ipsec-crypto-profiles>
+            <global-protect-app-crypto-profiles>
+              <entry name="default">
+                <encryption>
+                  <member>aes-128-cbc</member>
+                </encryption>
+                <authentication>
+                  <member>sha1</member>
+                </authentication>
+              </entry>
+            </global-protect-app-crypto-profiles>
+          </crypto-profiles>
+        </ike>
+        <qos>
+          <profile>
+            <entry name="default">
+              <class-bandwidth-type>
+                <mbps>
+                  <class>
+                    <entry name="class1">
+                      <priority>real-time</priority>
+                    </entry>
+                    <entry name="class2">
+                      <priority>high</priority>
+                    </entry>
+                    <entry name="class3">
+                      <priority>high</priority>
+                    </entry>
+                    <entry name="class4">
+                      <priority>medium</priority>
+                    </entry>
+                    <entry name="class5">
+                      <priority>medium</priority>
+                    </entry>
+                    <entry name="class6">
+                      <priority>low</priority>
+                    </entry>
+                    <entry name="class7">
+                      <priority>low</priority>
+                    </entry>
+                    <entry name="class8">
+                      <priority>low</priority>
+                    </entry>
+                  </class>
+                </mbps>
+              </class-bandwidth-type>
+            </entry>
+          </profile>
+        </qos>
+        <virtual-router>
+          <entry name="default">
+            <protocol>
+              <bgp>
+                <enable>no</enable>
+                <dampening-profile>
+                  <entry name="default">
+                    <cutoff>1.25</cutoff>
+                    <reuse>0.5</reuse>
+                    <max-hold-time>900</max-hold-time>
+                    <decay-half-life-reachable>300</decay-half-life-reachable>
+                    <decay-half-life-unreachable>900</decay-half-life-unreachable>
+                    <enable>yes</enable>
+                  </entry>
+                </dampening-profile>
+                <routing-options>
+                  <graceful-restart>
+                    <enable>yes</enable>
+                  </graceful-restart>
+                </routing-options>
+              </bgp>
+              <rip>
+                <enable>no</enable>
+              </rip>
+              <ospf>
+                <enable>no</enable>
+              </ospf>
+              <ospfv3>
+                <enable>no</enable>
+              </ospfv3>
+            </protocol>
+            <interface>
+              <member>ethernet1/1</member>
+              <member>ethernet1/2</member>
+              <member>ethernet1/2.20</member>
+              <member>ethernet1/3</member>
+            </interface>
+            <ecmp>
+              <algorithm>
+                <ip-modulo />
+              </algorithm>
+            </ecmp>
+            <routing-table>
+              <ip>
+                <static-route>
+                  <entry name="default">
+                    <path-monitor>
+                      <enable>no</enable>
+                      <failure-condition>any</failure-condition>
+                      <hold-time>2</hold-time>
+                    </path-monitor>
+                    <nexthop>
+                      <ip-address>58.58.58.1</ip-address>
+                    </nexthop>
+                    <bfd>
+                      <profile>None</profile>
+                    </bfd>
+                    <interface>ethernet1/1</interface>
+                    <metric>10</metric>
+                    <destination>0.0.0.0/0</destination>
+                    <route-table>
+                      <unicast />
+                    </route-table>
+                  </entry>
+                </static-route>
+              </ip>
+            </routing-table>
+          </entry>
+        </virtual-router>
+      </network>
+      <deviceconfig>
+        <system>
+          <type>
+            <dhcp-client>
+              <send-hostname>yes</send-hostname>
+              <send-client-id>no</send-client-id>
+              <accept-dhcp-hostname>no</accept-dhcp-hostname>
+              <accept-dhcp-domain>no</accept-dhcp-domain>
+            </dhcp-client>
+          </type>
+          <update-server>updates.paloaltonetworks.com</update-server>
+          <update-schedule>
+            <threats>
+              <recurring>
+                <weekly>
+                  <day-of-week>wednesday</day-of-week>
+                  <at>01:02</at>
+                  <action>download-only</action>
+                </weekly>
+              </recurring>
+            </threats>
+          </update-schedule>
+          <timezone>US/Pacific</timezone>
+          <service>
+            <disable-telnet>yes</disable-telnet>
+            <disable-http>yes</disable-http>
+          </service>
+          <hostname>PA-VM</hostname>
+        </system>
+        <setting>
+          <config>
+            <rematch>yes</rematch>
+          </config>
+          <management>
+            <hostname-type-in-syslog>FQDN</hostname-type-in-syslog>
+          </management>
+          <auto-mac-detect>yes</auto-mac-detect>
+        </setting>
+      </deviceconfig>
+      <vsys>
+        <entry name="vsys1">
+          <application />
+          <application-group />
+          <zone>
+            <entry name="Untrust">
+              <network>
+                <layer3>
+                  <member>ethernet1/1</member>
+                </layer3>
+              </network>
+            </entry>
+            <entry name="DMZ">
+              <network>
+                <layer3>
+                  <member>ethernet1/3</member>
+                </layer3>
+              </network>
+            </entry>
+            <entry name="User">
+              <network>
+                <layer3>
+                  <member>ethernet1/2.20</member>
+                </layer3>
+              </network>
+            </entry>
+          </zone>
+          <service />
+          <service-group />
+          <schedule />
+          <rulebase>
+            <security>
+              <rules>
+                <entry name="ALLOW-BRANCH-USERS-OUTBOUND" uuid="dabaa1a8-5d12-42ff-820a-5c6bc2cfaf8b">
+                  <from>
+                    <member>User</member>
+                  </from>
+                  <to>
+                    <member>Untrust</member>
+                  </to>
+                  <source>
+                    <member>BRANCH_USERS_SUBNET</member>
+                  </source>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <action>allow</action>
+                  <log-start>no</log-start>
+                  <log-end>yes</log-end>
+                  <description>allow User zone to Untrust</description>
+                  <rule-type>universal</rule-type>
+                  <negate-source>no</negate-source>
+                  <negate-destination>no</negate-destination>
+                  <disabled>no</disabled>
+                  <option>
+                    <disable-server-response-inspection>no</disable-server-response-inspection>
+                  </option>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                </entry>
+                <entry name="ALLOW-BRANCH-USERS-TO-DMZ" uuid="3096a672-b8f6-43f2-bb02-e1af639ed0c0">
+                  <from>
+                    <member>User</member>
+                  </from>
+                  <to>
+                    <member>DMZ</member>
+                  </to>
+                  <source>
+                    <member>BRANCH_USERS_SUBNET</member>
+                  </source>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <destination>
+                    <member>BRANCH_DMZ_SUBNET</member>
+                  </destination>
+                  <application>
+                    <member>ping</member>
+                    <member>ssh</member>
+                    <member>web-browsing</member>
+                    <member>ssl</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <action>allow</action>
+                  <log-start>no</log-start>
+                  <log-end>yes</log-end>
+                  <description>Allow Branch users to DMZ server</description>
+                  <rule-type>universal</rule-type>
+                  <negate-source>no</negate-source>
+                  <negate-destination>no</negate-destination>
+                  <disabled>no</disabled>
+                  <option>
+                    <disable-server-response-inspection>no</disable-server-response-inspection>
+                  </option>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                </entry>
+              </rules>
+            </security>
+            <nat>
+              <rules>
+                <entry name="SNAT-BRANCH-USERS-OUTBOUND" uuid="639403c9-af4a-4a0d-abca-b40de99f8fd1">
+                  <description>Source NAT Branch users to untrustt</description>
+                  <nat-type>ipv4</nat-type>
+                  <from>
+                    <member>User</member>
+                  </from>
+                  <to>
+                    <member>Untrust</member>
+                  </to>
+                  <service>any</service>
+                  <source>
+                    <member>BRANCH_USERS_SUBNET</member>
+                  </source>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <source-translation>
+                    <dynamic-ip-and-port>
+                      <interface-address>
+                        <interface>ethernet1/1</interface>
+                      </interface-address>
+                    </dynamic-ip-and-port>
+                  </source-translation>
+                </entry>
+              </rules>
+            </nat>
+          </rulebase>
+          <import>
+            <network>
+              <interface>
+                <member>ethernet1/1</member>
+                <member>ethernet1/3</member>
+                <member>ethernet1/2</member>
+                <member>ethernet1/2.20</member>
+              </interface>
+            </network>
+          </import>
+          <address>
+            <entry name="HQ_USER_SUBNET">
+              <ip-netmask>10.10.10.0/24</ip-netmask>
+            </entry>
+            <entry name="DMZ_SUBNET">
+              <ip-netmask>100.100.100.0/24</ip-netmask>
+            </entry>
+            <entry name="BRANCH_USERS_SUBNET">
+              <ip-netmask>10.20.20.0/24</ip-netmask>
+              <description>Branch  internal users subnet</description>
+            </entry>
+            <entry name="BRANCH_DMZ_SUBNET">
+              <ip-netmask>200.200.200.0/24</ip-netmask>
+              <description>Branch DMZ Subnet</description>
+            </entry>
+          </address>
+          <address-group>
+            <entry name="HQ_USERS_SUBNET">
+              <static>
+                <member>HQ_USER_SUBNET</member>
+              </static>
+            </entry>
+            <entry name="HQ_DMZ_SUBNET">
+              <static>
+                <member>DMZ_SUBNET</member>
+              </static>
+            </entry>
+          </address-group>
+        </entry>
+      </vsys>
+    </entry>
+  </devices>
+</config></result></response>
