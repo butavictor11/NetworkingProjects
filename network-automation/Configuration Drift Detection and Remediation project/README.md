@@ -93,8 +93,7 @@ That makes the workflow closer to real operations:
 ├── templates/                    # Jinja2 NETCONF XML templates
 ├── rendered/                     # Rendered XML examples
 ├── inventory.example.yml         # Sanitized inventory example
-├── requirements.txt              # Python dependencies
-└── DEMO.md                       # Demo walkthrough
+└── requirements.txt              # Python dependencies
 ```
 
 `inventory.yml` is intentionally ignored because it contains local lab endpoints and credentials.
@@ -136,32 +135,6 @@ Value of root['Loopback0']['ip'] changed from "1.1.1.1" to "11.11.11.11".
 Remediate Interfaces config on r1? yes/no: yes
 Pushing interfaces.j2 to r1...
 Interfaces remediated on r1
-```
-
-## How To Use
-
-1. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-On Ubuntu/Debian systems with externally managed Python, install packages with apt where available, or use a virtual environment.
-
-2. Create a local inventory file:
-
-```bash
-cp inventory.example.yml inventory.yml
-```
-
-3. Update `inventory.yml` with your lab router IPs and credentials.
-
-4. Update the desired state under `hosts.vars/`.
-
-5. Run the script:
-
-```bash
-python3 config_drift_remediation.py
 ```
 
 ## Design Notes
