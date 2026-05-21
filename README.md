@@ -131,6 +131,82 @@ The project focuses on building a more realistic enterprise security design wher
 
 ---
 
+## Configuration Drift Detection and Remediation Project
+
+**Project path:** `network-automation/Configuration Drift Detection and Remediation project/`
+
+This project is a Python-based network automation workflow focused on configuration drift detection, controlled remediation, and post-change verification using NETCONF/YANG.
+
+The project uses YAML files as the source of truth, pulls live running configuration from Cisco IOS XE routers with NETCONF, normalizes both desired and actual state into Python dictionaries, compares them with DeepDiff, and optionally remediates only the configuration section where drift is detected.
+
+### Scenario
+
+The lab simulates a network operations workflow where router configuration is expected to match a documented source of truth. If a device is manually changed outside the intended state, the script detects the mismatch and gives the operator the option to remediate the drift.
+
+The workflow covers three configuration domains:
+
+| Configuration Area | Purpose |
+|---|---|
+| Interfaces | Validates interface IP addressing against YAML intent |
+| Static Routing | Validates static route prefixes and next-hop values |
+| BGP | Validates ASN, router ID, neighbors, update source, multihop, and advertised networks |
+
+### Key Features
+
+- YAML-based source of truth
+- NETCONF/YANG live configuration collection
+- Cisco IOS XE native YANG model usage
+- Jinja2-rendered NETCONF XML templates
+- XML parsing with `lxml`
+- Desired-state and actual-state normalization into Python dictionaries
+- DeepDiff comparison for drift detection
+- Section-based drift checks for interfaces, static routes, and BGP
+- Operator confirmation before remediation
+- Targeted remediation using only the drifted configuration template
+- Post-remediation verification by pulling live config again
+- Rendered XML examples saved for review and troubleshooting
+- Local inventory file excluded from GitHub with a sanitized example inventory included
+
+### Automation Workflow
+
+```text
+Load YAML Source of Truth
+  -> Pull Running Config with NETCONF
+  -> Parse YANG XML
+  -> Normalize Desired and Actual State
+  -> Compare with DeepDiff
+  -> Prompt for Remediation
+  -> Push Drifted Section Only
+  -> Pull Running Config Again
+  -> Verify Compliance
+```
+
+### Example Drift
+
+A common test case is changing `Loopback0` on a router so that the live device no longer matches the YAML source of truth.
+
+| Source | Loopback0 IP |
+|---|---|
+| YAML desired state | `1.1.1.1/32` |
+| Router actual state | `11.11.11.11/32` |
+
+The script detects the mismatch, shows the exact DeepDiff output, asks whether to remediate the interface configuration, pushes the interface template, and verifies the router again.
+
+### Skills Demonstrated
+
+| Area | Skills |
+|---|---|
+| Python | Scripting, functions, dictionaries, control flow, data normalization |
+| NETCONF/YANG | Running config collection, subtree filters, Cisco IOS XE native model usage |
+| XML Parsing | `lxml`, namespaces, extracting structured configuration data |
+| Jinja2 | NETCONF XML template rendering for targeted configuration pushes |
+| YAML | Source-of-truth data modeling for router intent |
+| Drift Detection | DeepDiff comparison of desired state vs actual running state |
+| Remediation | Section-based correction, operator approval, post-check verification |
+| Network Automation Design | Closed-loop workflow, safe inventory handling, reusable remediation function |
+
+---
+
 # Palo Alto Firewall Automation Project
 
 **Project path:** `firewall-automation/`
@@ -405,66 +481,6 @@ This project is designed as a hands-on lab and portfolio project for learning fi
 - Post-deployment validation scripts
 - CI/CD pipeline integration
 - Automated firewall compliance checks
-
-## Ansible Projects
-
-The Ansible projects focus on building repeatable automation workflows using playbooks, separated task files, YAML variables, and Jinja2 templates.
-
-| Project | Description |
-|---|---|
-| Basic Ansible Playbooks | Introductory playbooks for collecting device information, configuring loopbacks, and backing up configurations |
-| Three-Tier Campus LAN Automation | Builds a functional three-tier campus design using Ansible, separated task files, YAML variables, and Jinja2 templates |
-| Compliance Audit and Remediation | Audits RADIUS, NTP, and login banner configuration across multiple devices; if a device fails the audit, remediation is applied and the audit is run again |
-
-### Key Ansible Work
-
-- `version.yml` collects `show version` and `show inventory` from multiple devices.
-- `loopbacks.yml` creates loopback interfaces and assigns IP addresses using variable files.
-- `backup.yml` saves timestamped running configuration backups.
-- Campus LAN automation uses separated task files for cleaner playbook structure.
-- Jinja2 templates generate a functional three-tier campus LAN configuration.
-- Campus automation includes VLANs, SVIs, trunks, access ports, interface descriptions, and variable-driven configuration.
-- Compliance automation validates RADIUS, NTP, and login banner configuration across multiple devices.
-- Failed audit checks trigger remediation.
-- The audit is run again after remediation to confirm compliance.
-- Aggregate and per-device reports are generated after every audit run.
-
-### Skills Demonstrated
-
-| Area | Skills |
-|---|---|
-| Ansible | Playbooks, task files, variables, inventory, command execution, configuration deployment |
-| Jinja2 | Template-based campus configuration generation |
-| YAML | Structured input data for repeatable automation |
-| Compliance | Audit, remediation, re-check workflow |
-| Reporting | Aggregate and per-device audit reports |
-| Campus Design | VLANs, trunks, access ports, SVIs, three-tier campus LAN configuration |
-
----
-
-## Python / Netmiko Projects
-
-The Python and Netmiko projects focus on SSH-based network automation, data collection, configuration backup, and template-driven routing configuration.
-
-| Script / Project | Description |
-|---|---|
-| `Inventory/inventory.py` | Collects hostname, operating system, software version, and uptime information from multiple devices and exports the results to a CSV file |
-| `ConfigBackup/config_backup.py` | Collects running configurations from multiple devices and saves each configuration into a separate backup file |
-| `bgp_practice/bgp_practice.py` | Uses Jinja2 templates and Netmiko to configure BGP neighbor relationships and advertise networks between devices |
-| `BGP/bgp_config.py` | Uses YAML variables, Jinja2 templates, and Netmiko to build a more advanced BGP automation workflow, including route reflector configuration and policy-based traffic steering |
-
-### Skills Demonstrated
-
-| Area | Skills |
-|---|---|
-| Python | Scripting, file handling, CSV generation, automation logic |
-| Netmiko | SSH connectivity, command execution, configuration deployment |
-| Jinja2 | Template-driven configuration generation |
-| YAML | Structured variables for routing configuration |
-| BGP Automation | Neighbor creation, network advertisement, route reflector configuration, traffic engineering |
-| Operations | Inventory collection and configuration backup automation |
-
----
 
 # Protocol Independent Multicast Labs
 
