@@ -166,6 +166,7 @@ The workflow covers three configuration domains:
 - Post-remediation verification by pulling live config again
 - Rendered XML examples saved for review and troubleshooting
 - Local inventory file excluded from GitHub with a sanitized example inventory included
+- Deliberate safety boundary: extra running configuration is detected but not blindly deleted
 
 ### Automation Workflow
 
@@ -204,6 +205,7 @@ The script detects the mismatch, shows the exact DeepDiff output, asks whether t
 | Drift Detection | DeepDiff comparison of desired state vs actual running state |
 | Remediation | Section-based correction, operator approval, post-check verification |
 | Network Automation Design | Closed-loop workflow, safe inventory handling, reusable remediation function |
+| Change Safety | Approval-based remediation, post-check verification, cautious handling of delete operations |
 
 ---
 

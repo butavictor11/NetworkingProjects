@@ -143,6 +143,26 @@ The script intentionally normalizes both desired and actual state into Python di
 
 The remediation logic is section-based. If only BGP drifts, only the BGP template is pushed. If only interfaces drift, only the interface template is pushed.
 
+## Design Decision: Extra Configuration Handling
+
+The script remediates missing or changed intended state by reapplying the relevant source-of-truth template and verifying the device afterward.
+
+It does not blindly delete extra running configuration.
+
+This is intentional. Extra configuration can be operationally sensitive, especially under BGP, static routing, route policy, redistribution, or security-related configuration. In production, removal actions normally require stronger guardrails than merge-style remediation because deleting the wrong object can cause an outage.
+
+For example:
+
+| Extra Config Type | Treatment |
+|---|---|
+| Extra lab loopback | Candidate for controlled deletion |
+| Extra static route | Approval or manual review recommended |
+| Extra BGP network | Approval recommended |
+| Extra BGP neighbor | Report-only or manual review |
+| Extra policy / route-map / redistribution | Report-only or manual review |
+
+This project treats drift remediation as a controlled workflow rather than a blind overwrite. Missing or changed desired state can be corrected with operator approval, while deletion workflows should be implemented separately with explicit per-section policies.
+
 ## Future Improvements
 
 - Replace YAML with NetBox as the source of truth
