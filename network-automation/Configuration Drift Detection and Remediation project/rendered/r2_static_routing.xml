@@ -1,0 +1,31 @@
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
+  <edit-config>
+    <target>
+      <running/>
+    </target>
+    <config>
+      <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+        <ip>
+          <route>
+            <ip-route-interface-forwarding-list>
+              <prefix>1.1.1.1</prefix>
+              <mask>255.255.255.255</mask>
+              <fwd-list>
+                <fwd>10.1.2.1</fwd>
+              </fwd-list>
+            </ip-route-interface-forwarding-list>
+          </route>
+          <route>
+            <ip-route-interface-forwarding-list>
+              <prefix>4.4.4.4</prefix>
+              <mask>255.255.255.255</mask>
+              <fwd-list>
+                <fwd>10.2.4.4</fwd>
+              </fwd-list>
+            </ip-route-interface-forwarding-list>
+          </route>
+        </ip>
+      </native>
+    </config>
+  </edit-config>
+</rpc>

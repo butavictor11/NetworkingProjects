@@ -1,0 +1,27 @@
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
+  <edit-config>
+    <target>
+      <running/>
+    </target>
+    <config>
+      <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+        <interface>
+{% for interface in interfaces %}
+          <{{ interface.type }}>
+            <name>{{ interface.name }}</name>
+            <description>{{ interface.description }}</description>
+            <ip>
+              <address>
+                <primary>
+                  <address>{{ interface.ip }}</address>
+                  <mask>{{ interface.mask }}</mask>
+                </primary>
+              </address>
+            </ip>
+          </{{ interface.type }}>
+{% endfor %}
+        </interface>
+      </native>
+    </config>
+  </edit-config>
+</rpc>

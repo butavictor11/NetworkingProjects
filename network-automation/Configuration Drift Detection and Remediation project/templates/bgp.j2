@@ -1,0 +1,58 @@
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
+  <edit-config>
+    <target>
+      <running/>
+    </target>
+    <config>
+      <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+        <router>
+          <bgp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-bgp">
+            <id>{{ bgp.asn }}</id>
+            <bgp>
+              <router-id>
+                <ip-id>{{ bgp.router_id }}</ip-id>
+              </router-id>
+            </bgp>
+{% for nei in bgp.neighbors%}
+            <neighbor>
+              <id>{{ nei.nei_rid }}</id>
+              <remote-as>{{ nei.remote_as }}</remote-as>
+              <ebgp-multihop>
+                <max-hop>{{ nei.ebgp_hops }}</max-hop>
+              </ebgp-multihop>
+              <update-source>
+                <interface>
+                  <Loopback>{{ nei.nei_loopback }}</Loopback>
+                </interface>
+              </update-source>
+            </neighbor>
+{% endfor %}
+            <address-family>
+              <no-vrf>
+                <ipv4>
+                  <af-name>unicast</af-name>
+                  <ipv4-unicast>
+{% for nei in bgp.neighbors %}
+                    <neighbor>
+                      <id>{{ nei.nei_rid }}</id>
+                      <activate/>
+                    </neighbor>
+{% endfor %}
+{% for net in bgp.bgp_networks %}
+                    <network>
+                      <with-mask>
+                        <number>{{ net.ip }}</number>
+                        <mask>{{ net.mask }}</mask>
+                      </with-mask>
+                    </network>
+{% endfor %}
+                  </ipv4-unicast>
+                </ipv4>
+              </no-vrf>
+            </address-family>
+          </bgp>
+        </router>
+      </native>
+    </config>
+  </edit-config>
+</rpc>

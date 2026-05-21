@@ -1,0 +1,23 @@
+r1:
+  host: 192.0.2.11
+  port: 830
+  username: netconf-user
+  password: change-me
+
+r2:
+  host: 192.0.2.12
+  port: 830
+  username: netconf-user
+  password: change-me
+
+r3:
+  host: 192.0.2.13
+  port: 830
+  username: netconf-user
+  password: change-me
+
+r4:
+  host: 192.0.2.14
+  port: 830
+  username: netconf-user
+  password: change-me

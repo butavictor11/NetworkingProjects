@@ -1,0 +1,5 @@
+PyYAML
+Jinja2
+lxml
+ncclient
+deepdiff

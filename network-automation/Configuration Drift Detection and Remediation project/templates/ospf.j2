@@ -1,0 +1,28 @@
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
+  <edit-config>
+    <target>
+      <running/>
+    </target>
+    <config>
+      <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+        <router>
+          <router-ospf xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ospf">
+            <ospf>
+              <process-id>
+                <id>{{ ospf.process_id }}</id>
+{% for network in ospf.networks %}
+                <network>
+                  <ip>{{ network.ip }}</ip>
+                  <wildcard>{{ network.wildcard }}</wildcard>
+                  <area>{{ network.area }}</area>
+                </network>
+{% endfor %}
+                <router-id>{{ ospf.router_id }}</router-id>
+              </process-id>
+            </ospf>
+          </router-ospf>
+        </router>
+      </native>
+    </config>
+  </edit-config>
+</rpc>
