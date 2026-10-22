@@ -56,8 +56,8 @@ These are lab builds on virtualised appliances, not production deployments. Scal
 
 My network automation work lives in its own repositories:
 
-- **netbox-intent-pipeline** — a GitLab CI/CD pipeline that treats NetBox as the source of truth: renders device configuration, validates it offline, builds an ephemeral Cisco CML lab with Terraform, deploys with Ansible, and verifies with pyATS that the live network matches declared intent — rolling back automatically when it doesn't. → LINK_HERE
-- **CDP-driven interface description automation** — discovers topology over CDP and writes interface descriptions from what it finds, with pre/post snapshot-diff gating and an idempotency check. → LINK_HERE
+- **netbox-intent-pipeline** — a GitLab CI/CD pipeline that treats NetBox as the source of truth: renders device configuration, validates it offline, builds an ephemeral Cisco CML lab with Terraform, deploys with Ansible, and verifies with pyATS that the live network matches declared intent — rolling back automatically when it doesn't. → https://gitlab.com/coodyboota-limited-group/netbox-intent-pipeline
+- **CDP-driven interface description automation** — discovers topology over CDP and writes interface descriptions from what it finds, with pre/post snapshot-diff gating and an idempotency check. →https://gitlab.com/coodyboota-limited-group/cicd-demo
 
 ---
 
